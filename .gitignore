@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+.env
+.env.*
+*.log
+*.pth
+*.pt
+*.npz
+*.npy
+*.mat
+results/*
+!results/.gitkeep
+investigations/*/runs/
