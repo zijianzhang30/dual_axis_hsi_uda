@@ -51,7 +51,7 @@ def evaluate(model, loader, device, classes, diagnostics=False):
     model.eval()
     labels, predictions, base_predictions = [], [], []
     attention_sums = {key: None for key in ("spatial_attn", "spectral_attn",
-                       "memory_spatial_attn", "memory_spectral_attn")}
+                       "class_attn_self", "memory_spatial_attn", "memory_spectral_attn")}
     attention_counts = {key: 0 for key in attention_sums}
     for images, target in loader:
         images = images.to(device)
@@ -74,6 +74,10 @@ def evaluate(model, loader, device, classes, diagnostics=False):
         for key in attention_sums:
             mean = attention_sums[key]
             report["mean_" + key] = (mean / attention_counts[key]).tolist() if mean is not None else None
+        if model.variant == "a2_lite":
+            class_attention = report["mean_class_attn_self"]
+            report["class_attention_spatial_mass"] = float(sum(class_attention[:4]))
+            report["class_attention_spectral_mass"] = float(sum(class_attention[4:]))
         if base_predictions:
             memory_predictions = np.concatenate(base_predictions)
             changed = memory_predictions != predictions
@@ -89,7 +93,7 @@ def evaluate(model, loader, device, classes, diagnostics=False):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--variant", choices=("a0", "a1", "a2", "a3"), required=True)
+    parser.add_argument("--variant", choices=("a0", "a1", "a2_lite", "a2", "a3"), required=True)
     parser.add_argument("--seed", type=int, default=2100)
     parser.add_argument("--epochs", type=int, default=200)
     parser.add_argument("--batch-size", type=int, default=128)
@@ -118,16 +122,19 @@ def main():
     optimizer = torch.optim.SGD(model.parameters(), lr=args.lr)
     config = {"variant": args.variant, "seed": args.seed, "epochs": args.epochs,
               "batch_size": args.batch_size, "patch_size": args.patch_size, "lr": args.lr,
+              "trainable_parameters": sum(parameter.numel() for parameter in model.parameters() if parameter.requires_grad),
               "optimizer": "SGD, no momentum or schedule (Strict BiDA)",
               "source_train_pixels": len(train.dataset), "source_val_pixels": len(val.dataset),
               "target_train_pixels": len(target_train.dataset),
               "checkpoint_selection": f"fixed_epoch_{args.epochs}",
               "target_gt_use": "Strict BiDA target GT mask selects unlabeled training centers; label values ignored by loss; metrics after training",
-              "a3_training": "mean(source self CE, source memory CE) + detached target memory teacher KL; EMA updated after each optimizer step",
-              "source_ce_weights": [0.5, 0.5], "lambda_dist": 1.0,
-              "temperature": 1.0, "inference_branch": "target_self",
+              "source_ce_weights": [0.5, 0.5] if args.variant == "a3" else [1.0],
+              "inference_branch": "target_self",
               "source_split": "BiDA sample_gt random_state=23, stratified 95/5",
               "dataset_dir": str(args.dataset_dir), "bida_root": str(args.bida_root)}
+    if args.variant == "a3":
+        config.update({"a3_training": "mean(source self CE, source memory CE) + detached target memory teacher KL; EMA updated after each optimizer step",
+                       "lambda_dist": 1.0, "temperature": 1.0})
     (args.out / "config.json").write_text(json.dumps(config, indent=2) + "\n")
     with (args.out / "history.jsonl").open("w") as history:
         for epoch in range(1, args.epochs + 1):

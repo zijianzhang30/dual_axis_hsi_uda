@@ -1,4 +1,4 @@
-"""Dual-axis semantic memory network and its A0--A3 ablations."""
+"""Dual-axis semantic memory network and its A0--A3/A2-lite ablations."""
 
 import math
 
@@ -35,7 +35,7 @@ class DualAxisModel(nn.Module):
                  dim=128, spectral_bins=12, spatial_slots=4, spectral_slots=4,
                  heads=4, memory_momentum=0.9):
         super().__init__()
-        if variant not in {"a0", "a1", "a2", "a3"}:
+        if variant not in {"a0", "a1", "a2_lite", "a2", "a3"}:
             raise ValueError(f"Unknown ablation: {variant}")
         if bands < 4 or patch_size < 1 or spectral_bins < 1 or dim % heads:
             raise ValueError("Invalid input dimensions or attention head count")
@@ -55,12 +55,13 @@ class DualAxisModel(nn.Module):
             self.spatial_projection = nn.Conv3d(channels, dim, (spectral_bins, 1, 1))
             self.spatial_queries = nn.Parameter(torch.randn(spatial_slots, dim) * 0.02)
             self.spatial_reader = CrossBlock(dim, heads)
-            if variant in {"a2", "a3"}:
+            if variant in {"a2_lite", "a2", "a3"}:
                 self.spectral_projection = nn.Linear(channels, dim)
                 self.spectral_queries = nn.Parameter(torch.randn(spectral_slots, dim) * 0.02)
                 self.spectral_reader = CrossBlock(dim, heads)
-                self.spatial_fusion = CrossBlock(dim, heads)
-                self.spectral_fusion = CrossBlock(dim, heads)
+                if variant in {"a2", "a3"}:
+                    self.spatial_fusion = CrossBlock(dim, heads)
+                    self.spectral_fusion = CrossBlock(dim, heads)
             self.class_query = nn.Parameter(torch.randn(1, dim) * 0.02)
             self.class_reader = CrossBlock(dim, heads)
         self.classifier = nn.Sequential(nn.LayerNorm(dim), nn.Linear(dim, classes))
@@ -75,9 +76,9 @@ class DualAxisModel(nn.Module):
 
     def _classify(self, spatial, spectral):
         tokens = spatial if spectral is None else torch.cat((spatial, spectral), dim=1)
-        z_cls, _ = self.class_reader(self.class_query.unsqueeze(0).expand(tokens.shape[0], -1, -1), tokens)
+        z_cls, class_attn = self.class_reader(self.class_query.unsqueeze(0).expand(tokens.shape[0], -1, -1), tokens)
         z_cls = z_cls[:, 0]
-        return self.classifier(z_cls), z_cls
+        return self.classifier(z_cls), z_cls, class_attn[:, 0]
 
     def _memory_read(self, tokens, bank, reader):
         batch, slots, dim = tokens.shape
@@ -103,7 +104,8 @@ class DualAxisModel(nn.Module):
             z_cls = self.pool_head(cube.mean(dim=(2, 3, 4)))
             logits = self.classifier(z_cls)
             output.update(logits_self=logits, logits_memory=None, z_cls_self=z_cls,
-                          z_cls_memory=None, logits=logits, z_cls=z_cls)
+                          z_cls_memory=None, class_attn_self=None,
+                          class_attn_memory=None, logits=logits, z_cls=z_cls)
             return output
 
         batch, _, _, height, width = cube.shape
@@ -116,14 +118,15 @@ class DualAxisModel(nn.Module):
         spatial_pixels = spatial_pixels + position_2d.reshape(1, height * width, -1)
         spatial, spatial_attn = self.spatial_reader(self.spatial_queries[None].expand(batch, -1, -1), spatial_pixels)
         spectral = None
-        if self.variant in {"a2", "a3"}:
+        if self.variant in {"a2_lite", "a2", "a3"}:
             spectral_pixels = self.spectral_projection(cube.mean(dim=(3, 4)).transpose(1, 2))
             spectral_pixels = spectral_pixels + sinusoidal_positions(self.spectral_bins, spectral_pixels.shape[-1], x.device, x.dtype)
             spectral, spectral_attn = self.spectral_reader(self.spectral_queries[None].expand(batch, -1, -1), spectral_pixels)
-            # Both fusion directions read the same pre-fusion tokens.
-            spatial_new, _ = self.spatial_fusion(spatial, spectral)
-            spectral_new, _ = self.spectral_fusion(spectral, spatial)
-            spatial, spectral = spatial_new, spectral_new
+            if self.variant in {"a2", "a3"}:
+                # Both fusion directions read the same pre-fusion tokens.
+                spatial_new, _ = self.spatial_fusion(spatial, spectral)
+                spectral_new, _ = self.spectral_fusion(spectral, spatial)
+                spatial, spectral = spatial_new, spectral_new
             output["spectral_attn"] = spectral_attn
         output["spatial_attn"] = spatial_attn
         output["spatial_tokens"] = spatial
@@ -131,13 +134,15 @@ class DualAxisModel(nn.Module):
         if self.variant == "a3":
             output["alpha_spatial"] = self.alpha_spatial
             output["alpha_spectral"] = self.alpha_spectral
-        logits_self, z_cls_self = self._classify(spatial, spectral)
+        logits_self, z_cls_self, class_attn_self = self._classify(spatial, spectral)
         output["logits_self"] = logits_self
         output["z_cls_self"] = z_cls_self
+        output["class_attn_self"] = class_attn_self
         output["logits"] = logits_self
         output["z_cls"] = z_cls_self
         output["logits_memory"] = None
         output["z_cls_memory"] = None
+        output["class_attn_memory"] = None
         if self.variant == "a3":
             if use_memory and bool(self.memory_seen.any()):
                 spatial_read, spatial_weights = self._memory_read(spatial, self.memory_spatial, self.spatial_memory_reader)
@@ -146,11 +151,13 @@ class DualAxisModel(nn.Module):
                 spectral_memory = spectral + self.alpha_spectral * spectral_read
                 output["memory_spatial_attn"] = spatial_weights
                 output["memory_spectral_attn"] = spectral_weights
-                output["logits_memory"], output["z_cls_memory"] = self._classify(spatial_memory, spectral_memory)
+                (output["logits_memory"], output["z_cls_memory"],
+                 output["class_attn_memory"]) = self._classify(spatial_memory, spectral_memory)
             else:
                 # Before the first source update, the two branches coincide.
                 output["logits_memory"] = logits_self
                 output["z_cls_memory"] = z_cls_self
+                output["class_attn_memory"] = class_attn_self
         return output
 
     @torch.no_grad()
