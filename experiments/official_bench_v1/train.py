@@ -42,6 +42,7 @@ def main():
     p.add_argument('--seed',type=int,choices=(2100,2101,2102),required=True)
     p.add_argument('--device',type=int,required=True);a=p.parse_args()
     args=c.options(a.seed)
+    args.device=str(a.device)
     out=c.OUT/f'hyrank_{a.arm}_{a.seed}'
     if out.exists():raise RuntimeError('Refuse overwrite')
     assert json.loads((c.OUT/'implementation_checks.json').read_text())['all_passed']
@@ -72,7 +73,8 @@ def main():
     model.to(device)
     if ema is not None:ema.to(device)
     optimizer,scheduler=c.load_scheduler('BiDA',model,args);assert scheduler is None
-    criterion,_=c.make_loss(args,num_classes=12)
+    criterion=None
+    if a.arm=='A':criterion,_=c.make_loss(args,num_classes=12)
     trace=Trace();trace.device=device;trace.reset()
     hooks=[model.register_forward_pre_hook(trace.pre),model.register_forward_hook(trace.post)]
     training_source=TrainingLoader(source,trace);training_target=TrainingLoader(target,trace,True)

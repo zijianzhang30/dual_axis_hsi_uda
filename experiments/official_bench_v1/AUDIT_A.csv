@@ -1,0 +1,16 @@
+Item,Released code,Local frozen A,Consistency,Evidence or limitation
+Data files,Author Dioni and Loukia out68 labels,Same author out68 files and 176 bands and 12 classes,Confirmed,Full arrays and GT mapping compared against pinned upstream loader
+Normalization,Float32 global valid-spectrum scaling then per-pixel spectral L2,Direct call to same loader; no PCA or extra standardization,Confirmed,Whole-image maximum absolute difference is zero in both domains
+Source split,95 percent stratified random_state 23,Same split and native reflected patches,Confirmed,19021 usable source training centers and 1002 validation centers
+Target mask,Author GT nonzero centers with strict native boundary filter,Same mask and filter,Confirmed,10317 raw centers; 10287 usable centers; target label values replaced by zeros in training
+Training updates,Zip source and target; skip unequal batch lengths,80 updates per epoch and 16000 updates total,Confirmed,All 200 history rows for each seed inspected; no cycling or drop_last
+Model and optimizer,Native BiDA and SGD lr 0.01 without scheduler,Same modules and optimizer,Confirmed,AST comparison against upstream commit 66a92b542ffa1df3c8b628af3d8bd001b799f1f6
+Loss and EMA,Native CE plus bidirectional distillation plus consistency; MMD after epoch 100,Exact native AST training loop except evaluation callback,Confirmed,lambda1=0.1; lambda2=1; EMA decay=0.999; original expression order and unusual MMD self-self term retained
+Teacher behavior,Independent EMA initialization and parameter-only EMA updates,Same teacher behavior,Confirmed,No manual teacher eval or buffer EMA introduced
+Evaluation cadence,Target validation every 10 epochs with shared loader generator,Source validation at epoch 1 and every 10 epochs with shared generator,Different,Index-only replay confirms equal epoch-1 batches but different epoch-2 batches; effect on final accuracy not quantified
+Checkpoint endpoint,Target-best among every-10-epoch evaluations,Fixed epoch 200,Different,Existing checkpoints used for oracle diagnostic only; formal results remain fixed200
+Loader runtime compatibility,Upstream HSIDataset reads self.data without assigning it,Pre-existing self.data=image repair plus unused include_boundary option,Compatibility repair,Strict default boundary and patch logic tested with only the missing assignment repaired in-memory upstream
+MAT compatibility,scipy loadmat only,Pre-existing HDF5 fallback,No HyRANK numerical effect,HyRANK files use scipy path; normalized full-image arrays are equal
+Paper versus release,Paper describes class-matched pseudo-label pairing and Gaussian perturbation,Neither step appears in current released training path,Paper-release discrepancy,Not silently implemented or tuned; not established as the cause of the numerical gap
+Paper aggregation,Table XIV reports OA 68.89 and Kappa 0.6270,Three frozen local seeds 2100 2101 2102,Not established,Paper seed aggregation and checkpoint rule are not established; rounded per-class arithmetic AA is 63.6275
+Method conclusion,C minus B is a local protocol comparison,Paired improvements are inconsistent across seeds,Unchanged,Reproduction uncertainty does not establish tokenizer effectiveness

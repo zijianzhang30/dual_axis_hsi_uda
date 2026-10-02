@@ -75,7 +75,7 @@ def native_train():
 def options(seed=2100):
     return argparse.Namespace(model='BiDA',source_name='Dioni',target_name='Loukia',
              dataset_dir=str(DATA)+'/',patch_size=13,epoch=200,epochs=200,bs=128,lr=.01,
-             ratio=.95,ema_decay=.999,dim=64,depth=3,num_tokens=4,num_workers=4,
+             ratio=.95,ema_decay=.999,dim=64,depth=3,num_tokens=4,num_workers=4,device='7',
              loss_type='softmax',labelsmooth='off',lambda1=.1,lambda2=1.,log_interval=10,re_ratio=1,seed=seed)
 
 
