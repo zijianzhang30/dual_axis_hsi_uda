@@ -1,0 +1,8 @@
+{
+  "control_seed": 2101,
+  "verification": "PE-on first-epoch replay with identical initial tensors and loader setup",
+  "historical_source_ce": 1.1029226515028212,
+  "replayed_source_ce": 1.1029226515028212,
+  "absolute_difference": 0.0,
+  "scope": "First-epoch numerical replay; not an all-epoch historical batch-hash audit"
+}
