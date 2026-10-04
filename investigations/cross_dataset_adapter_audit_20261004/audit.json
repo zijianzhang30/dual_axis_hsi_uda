@@ -1,0 +1,452 @@
+{
+  "scope": "Fresh CPU loader geometry and saved-prediction audit; no training",
+  "flip_geometry": [
+    {
+      "patch": 12,
+      "horizontal": false,
+      "vertical": false,
+      "labeled_pixel": 1010,
+      "actual_anchor_pixel": 1010,
+      "anchor_matches_labeled_pixel": true,
+      "returned_label": 1
+    },
+    {
+      "patch": 12,
+      "horizontal": true,
+      "vertical": false,
+      "labeled_pixel": 1010,
+      "actual_anchor_pixel": 1009,
+      "anchor_matches_labeled_pixel": false,
+      "returned_label": 1
+    },
+    {
+      "patch": 12,
+      "horizontal": false,
+      "vertical": true,
+      "labeled_pixel": 1010,
+      "actual_anchor_pixel": 910,
+      "anchor_matches_labeled_pixel": false,
+      "returned_label": 1
+    },
+    {
+      "patch": 12,
+      "horizontal": true,
+      "vertical": true,
+      "labeled_pixel": 1010,
+      "actual_anchor_pixel": 909,
+      "anchor_matches_labeled_pixel": false,
+      "returned_label": 1
+    },
+    {
+      "patch": 13,
+      "horizontal": false,
+      "vertical": false,
+      "labeled_pixel": 1010,
+      "actual_anchor_pixel": 1010,
+      "anchor_matches_labeled_pixel": true,
+      "returned_label": 1
+    },
+    {
+      "patch": 13,
+      "horizontal": true,
+      "vertical": false,
+      "labeled_pixel": 1010,
+      "actual_anchor_pixel": 1010,
+      "anchor_matches_labeled_pixel": true,
+      "returned_label": 1
+    },
+    {
+      "patch": 13,
+      "horizontal": false,
+      "vertical": true,
+      "labeled_pixel": 1010,
+      "actual_anchor_pixel": 1010,
+      "anchor_matches_labeled_pixel": true,
+      "returned_label": 1
+    },
+    {
+      "patch": 13,
+      "horizontal": true,
+      "vertical": true,
+      "labeled_pixel": 1010,
+      "actual_anchor_pixel": 1010,
+      "anchor_matches_labeled_pixel": true,
+      "returned_label": 1
+    }
+  ],
+  "runs": {
+    "B": {
+      "epoch21": {
+        "oa": 54.57981971503344,
+        "aa": 41.25829603438688,
+        "recalls": [
+          33.00970873786408,
+          0.0,
+          50.93896713615024,
+          11.39240506329114,
+          1.084010840108401,
+          20.14218009478673,
+          70.09345794392523,
+          45.531554426090636,
+          62.907268170426065,
+          0.0,
+          100.0,
+          100.0
+        ],
+        "zero_recall_classes": [
+          2,
+          10
+        ]
+      },
+      "latest_evaluated": {
+        "epoch": 211,
+        "oa": 54.637976155859256,
+        "aa": 41.56152269407842
+      },
+      "last_logged_epoch": 217,
+      "index_hashes": {
+        "train_dataset": "34ed118f5e0d8ace32e18586c7ce0a664a2111cb4042d88d79e17dbf02d9f414",
+        "train_tar_dataset": "43c6248671d85c063c52a8106dd51de03680f282fa1825b411580245ac4fea5d",
+        "test_dataset": "d36680d8ad65c0ce7ded898474724b809387fbaacc9e15d2b60730e0cb602718"
+      },
+      "labels_hashes": {
+        "train_dataset": "5e77bb4fdecc084684a2de8ce7f8e9a9704d1045e75e162f1b2df244bef0996c",
+        "test_dataset": "b6fb4013583826e0cc717005845fa02873ce4df97802d5a0c32f38d460551512"
+      },
+      "CE_pair_config_checks": null,
+      "mmd_batches_through21": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "C": {
+      "epoch21": {
+        "oa": 55.46185906755839,
+        "aa": 41.964490645986245,
+        "recalls": [
+          36.89320388349515,
+          0.0,
+          27.464788732394368,
+          27.848101265822784,
+          0.09033423667570009,
+          14.454976303317535,
+          73.86515353805073,
+          47.26810673443456,
+          75.6892230576441,
+          0.0,
+          100.0,
+          100.0
+        ],
+        "zero_recall_classes": [
+          2,
+          10
+        ]
+      },
+      "latest_evaluated": {
+        "epoch": 211,
+        "oa": 55.74294853154987,
+        "aa": 40.56494494311333
+      },
+      "last_logged_epoch": 216,
+      "index_hashes": {
+        "train_dataset": "34ed118f5e0d8ace32e18586c7ce0a664a2111cb4042d88d79e17dbf02d9f414",
+        "train_tar_dataset": "43c6248671d85c063c52a8106dd51de03680f282fa1825b411580245ac4fea5d",
+        "test_dataset": "d36680d8ad65c0ce7ded898474724b809387fbaacc9e15d2b60730e0cb602718"
+      },
+      "labels_hashes": {
+        "train_dataset": "5e77bb4fdecc084684a2de8ce7f8e9a9704d1045e75e162f1b2df244bef0996c",
+        "test_dataset": "b6fb4013583826e0cc717005845fa02873ce4df97802d5a0c32f38d460551512"
+      },
+      "CE_pair_config_checks": null,
+      "mmd_batches_through21": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "A": {
+      "epoch21": {
+        "oa": 56.86730638751575,
+        "aa": 44.04856737580862,
+        "recalls": [
+          14.563106796116504,
+          3.7037037037037033,
+          37.79342723004695,
+          43.037974683544306,
+          7.226738934056007,
+          19.194312796208532,
+          66.85580774365822,
+          57.009741634900465,
+          79.19799498746866,
+          0.0,
+          100.0,
+          100.0
+        ],
+        "zero_recall_classes": [
+          10
+        ]
+      },
+      "latest_evaluated": {
+        "epoch": 91,
+        "oa": 55.66540661044878,
+        "aa": 42.85106515126606
+      },
+      "last_logged_epoch": 92,
+      "index_hashes": {
+        "train_dataset": "34ed118f5e0d8ace32e18586c7ce0a664a2111cb4042d88d79e17dbf02d9f414",
+        "train_tar_dataset": "43c6248671d85c063c52a8106dd51de03680f282fa1825b411580245ac4fea5d",
+        "test_dataset": "d36680d8ad65c0ce7ded898474724b809387fbaacc9e15d2b60730e0cb602718"
+      },
+      "labels_hashes": {
+        "train_dataset": "5e77bb4fdecc084684a2de8ce7f8e9a9704d1045e75e162f1b2df244bef0996c",
+        "test_dataset": "b6fb4013583826e0cc717005845fa02873ce4df97802d5a0c32f38d460551512"
+      },
+      "CE_pair_config_checks": null,
+      "mmd_batches_through21": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "B_adapt": {
+      "epoch21": {
+        "oa": 53.78501502374722,
+        "aa": 34.37508181034691,
+        "recalls": [
+          0.9708737864077669,
+          0.0,
+          1.4084507042253522,
+          0.0,
+          0.0,
+          2.132701421800948,
+          66.95594125500668,
+          58.57687420584497,
+          82.45614035087719,
+          0.0,
+          100.0,
+          100.0
+        ],
+        "zero_recall_classes": [
+          2,
+          4,
+          5,
+          10
+        ]
+      },
+      "latest_evaluated": {
+        "epoch": 41,
+        "oa": 55.151691383154024,
+        "aa": 34.57317168823309
+      },
+      "last_logged_epoch": 42,
+      "index_hashes": {
+        "train_dataset": "34ed118f5e0d8ace32e18586c7ce0a664a2111cb4042d88d79e17dbf02d9f414",
+        "train_tar_dataset": "43c6248671d85c063c52a8106dd51de03680f282fa1825b411580245ac4fea5d",
+        "test_dataset": "d36680d8ad65c0ce7ded898474724b809387fbaacc9e15d2b60730e0cb602718"
+      },
+      "labels_hashes": {
+        "train_dataset": "5e77bb4fdecc084684a2de8ce7f8e9a9704d1045e75e162f1b2df244bef0996c",
+        "test_dataset": "b6fb4013583826e0cc717005845fa02873ce4df97802d5a0c32f38d460551512"
+      },
+      "CE_pair_config_checks": {
+        "seed": true,
+        "epochs": true,
+        "patch": true,
+        "batch": true,
+        "source_fraction": true,
+        "source_repeat": true,
+        "source_split": true,
+        "lr": true,
+        "momentum": true,
+        "weight_decay": true,
+        "lr_schedule": true,
+        "optimizer_recreated_each_epoch": true,
+        "native_grid": true,
+        "source_count": true,
+        "target_train_count": true,
+        "target_eval_count": true,
+        "source_steps_per_epoch": true,
+        "index_hashes": true,
+        "labels_hashes": true,
+        "shared_initial_sha256": true,
+        "initial_sha256": true,
+        "bn_momentum": true,
+        "parameters": true
+      },
+      "mmd_batches_through21": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "C_adapt": {
+      "epoch21": {
+        "oa": 55.74294853154987,
+        "aa": 34.796289420602704,
+        "recalls": [
+          0.0,
+          0.0,
+          3.755868544600939,
+          0.0,
+          0.09033423667570009,
+          0.47393364928909953,
+          70.42723631508679,
+          63.10885218127912,
+          79.69924812030075,
+          0.0,
+          100.0,
+          100.0
+        ],
+        "zero_recall_classes": [
+          1,
+          2,
+          4,
+          10
+        ]
+      },
+      "latest_evaluated": {
+        "epoch": 41,
+        "oa": 54.22118832994087,
+        "aa": 34.597769941429185
+      },
+      "last_logged_epoch": 43,
+      "index_hashes": {
+        "train_dataset": "34ed118f5e0d8ace32e18586c7ce0a664a2111cb4042d88d79e17dbf02d9f414",
+        "train_tar_dataset": "43c6248671d85c063c52a8106dd51de03680f282fa1825b411580245ac4fea5d",
+        "test_dataset": "d36680d8ad65c0ce7ded898474724b809387fbaacc9e15d2b60730e0cb602718"
+      },
+      "labels_hashes": {
+        "train_dataset": "5e77bb4fdecc084684a2de8ce7f8e9a9704d1045e75e162f1b2df244bef0996c",
+        "test_dataset": "b6fb4013583826e0cc717005845fa02873ce4df97802d5a0c32f38d460551512"
+      },
+      "CE_pair_config_checks": {
+        "seed": true,
+        "epochs": true,
+        "patch": true,
+        "batch": true,
+        "source_fraction": true,
+        "source_repeat": true,
+        "source_split": true,
+        "lr": true,
+        "momentum": true,
+        "weight_decay": true,
+        "lr_schedule": true,
+        "optimizer_recreated_each_epoch": true,
+        "native_grid": true,
+        "source_count": true,
+        "target_train_count": true,
+        "target_eval_count": true,
+        "source_steps_per_epoch": true,
+        "index_hashes": true,
+        "labels_hashes": true,
+        "shared_initial_sha256": true,
+        "initial_sha256": true,
+        "bn_momentum": true,
+        "parameters": true
+      },
+      "mmd_batches_through21": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  },
+  "all_five_arms_same_centers_and_labels": true,
+  "probability_anchor_moves_under_native_flip_policy": 0.375,
+  "limits": [
+    "Geometry defect is confirmed, its accuracy effect is not measured.",
+    "Epoch21 precedes MMD activation; its adaptation degradation cannot be caused by active MMD.",
+    "Latest evaluated epochs differ; use matched endpoints for comparison."
+  ]
+}
