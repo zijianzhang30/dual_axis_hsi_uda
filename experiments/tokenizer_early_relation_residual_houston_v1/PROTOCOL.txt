@@ -1,0 +1,11 @@
+Houston early center-referenced spectral residual exploratory experiment
+S0=C frozen official; S1=C+Conv3D relation residual before original BN3D
+R=(X-X_center)/(patch std correction=0+1e-6), actual input patch 13x13, center(6,6)
+Branch Conv3d 1->8 kernel(3,1,1) padding(1,0,0), bias=False; gamma scalar init0 unrestricted
+No extra activation/normalization/loss; all original paths unchanged
+25 additional parameters; original parameters/data/augmentation CPU and CUDA RNG matched per epoch
+Independent branch initialization RNG seed+71000, CPU generator, no CUDA RNG mutation
+Source self CE, Full Joint BN .19, original cross forward behavior preserved, batch128 SGD .01, 18 steps/epoch
+Stage1 seed2100 fixed100 from scratch, matched C2100 epoch100 only
+Go iff both paired OA and AA >0; no target-best or tuning. If Go run fixed seeds2100/2101/2102 from scratch200; no automatic Pavia
+Pavia untouched, no new variants beyond S1

@@ -1,0 +1,11 @@
+Independent Houston Center-Referenced Value Calibration
+Baseline C fixed tokenizer+FullJointBN/sourceCE; V1 modifies only actual value map V just before T=W V
+Vhat=V+gamma*MLP(d), d=L2normalize(V-Vcenter, channel dim,eps1e-6); Houston13x13 anchor6,6
+MLP Linear64->32(bias),ReLU,Linear32->64(bias); no norm/dropout/extra branchCNN or Transformer
+Gamma scalar unconstrained init0. New4193params,total382204. MLP(dcenter0) can be nonzero due biases; centre value can also be calibrated aftergamma learns.
+Full gradient throughV andcentre reference, no detach; gamma0 MLPgradient initially0 expected, gamma nongradzero thenMLPweights receivegradient aftergamma update
+Independent CPU initialization RNG(seed+73000); all original initialparams preserved; data andCPU/CUDA stochastic hashes matchC everyepoch
+Stage1 ONLY V1 seed2100 fixed100 fromscratch,GPU3; baselineC2100fixed100 checkpoint
+Predetermined Go iff V1-C OA>0 AND AA>0. No targetbest/hyperparameter tuning.
+IfGo Stage2 capacitymatched centre-freeV0: d=L2normalize(V); sameMLP/gamma/params/initialhash. TrainV0/V1 fixedseeds2100/2101/2102,200epoch fromscratch. Fixed200 evaluation only afterall6 freeze. No further module orPavia experiments.
+IfNoGo stop, no automatic W/V local variations. Historical Pavia and all experiments untouched.

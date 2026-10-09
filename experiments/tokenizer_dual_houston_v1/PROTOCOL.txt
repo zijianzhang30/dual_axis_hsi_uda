@@ -1,0 +1,35 @@
+Houston exploratory Semantic-Relational Dual-Token H, no automatic extensions.
+A/C official tokenizer_mechanism_v2 Houston results reused unchanged; H only3newruns.
+Seeds2100/2101/2102,200 epochs, fixedepoch200,sourceCEonly,batch128/domain,
+SGD.01,no momentum/weightdecay/schedule,depth3,4tokens64D,13x13,48bands,
+unchanged Full Joint BN momentum.19 and historical source validation/checkpoints.
+Same original CNN V feeds original conv_a spatialsoftmax and official normalized
+center-relative Linear48x32->ReLU->Linear32x4 spatialsoftmax. Both tokensBx4x64.
+H=(1-sigmoid(alpha))*Tsem+sigmoid(alpha)*Trel; alpha0,initialgate.5,oneglobal scalar.
+No concatenation, alignment, extra Transformer,crossattention,sample gate or otherloss.
+Semantic scorer retains original initialization; relation scorer independentCPU seed+41000.
+Original model/unused EMA RNG draw order retained. Main dropout/data/augmentation RNG
+hashes compared each of200epochs against frozen officialC; source/target indices exact.
+A/C/H original parameter hashes checked; all native initial tensors equal freshA;
+relation tensors equal officialC; added parameters onlyrelation1700 andgate1 vsA.
+H total378268;overhead vsC257,vsA1701.
+Added tokenizer MACs vsC86528/patch (conv_a43264+semanticpool43264), plusgate512 scalar
+arithmetic andsoftmax reductions; vsA324480/patch (relationMLP281216+pool43264),
+plus relation centering/std/ReLU andgate arithmetic. CNN/value/Transformer unchanged.
+Before training: shapes, both scorer andgate nonzero gradients andupdates, targetinput
+JointBN gradient path, native main RNG draw count equivalence verified. No target label
+used for training orselection; target evaluation labels scored onlyafterallH predictions frozen.
+Initial synthetic diagnostic inverification; actualfirst paired batch beforefirstSGD update
+saved inpretraining_slot_diagnostic.json. Epoch1and every10 logsfirstbatch diagnostics,
+per-epoch sourceCE,gate,mean gradientnorm forsemantic/relation/gate. Noextra RNG/forward.
+KxK map cosine/JS matrices andbestmatching over24 permutations saved. Serious slot
+permutation diagnostic: nonidentitybest fraction>=.75 ANDdiagonal-minus-best JS>=.01nats.
+Matching is diagnostic only, never applied to tokens. Same-index andmatched tokencosines
+reported. Final diagnostic usesallnative eval pixels, fixed200 weights/tokens stored.
+GO onlyif H-C meanOA ANDAA>=.25pp, medianOA ANDAA>0,>=2of3same seedsbothpositive,
+allfinalg between.1and.9,semantic ANDrelation finalepoch mean gradientnorm>1e-8 allseeds.
+Quarter-pp floor operationalizes HapproximatelyC; no claim of statistical significance.
+Collapse:maxpredictedclass share>=.95;zero-recall classesreported;sourcevalidation retained.
+No-Go stops withoutcomplex gate,concat,crossattention,newvariants oradditionaldatasets.
+Trainingtime andperseedoverheadreported with concurrentGPUload caveat.
+GPU3/6/7 reusedfollowingfinishedRI;Pavia tasks andartifacts untouched.

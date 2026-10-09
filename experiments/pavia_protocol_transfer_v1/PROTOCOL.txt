@@ -1,0 +1,26 @@
+Pavia protocol transfer V1. Fixed before target scoring; no adaptation losses.
+Seeds2100/2101/2102. Frozen C architecture in every group; only source-self CE.
+P0: reuse repaired Pavia C epoch200, L2/13/batch128/lr.01/current sampling.
+P1: official per-band z-score,180/class,11,batch32,100epochs,SGD.001/.9/5e-4.
+P2: P1 plus unmodified official ILDA(PCA2,epsilon.00009,guided radius1).
+Official SGD is recreated each epoch (momentum resets). Official range(1,num_iter)
+uses38 of39 full source batches:1216 samples/epoch,3800 optimizer updates.
+Use official zero padding for P1/P2; retain frozen-C one-view geometry augmentation,
+target-aware Full Joint BN(.19), target,target evaluation, 3 self Transformer blocks.
+No extra radiation forwards, coupled loss, distillation, EMA, LMMD, pseudo-labels,
+contrastive loss, target-best, hyperparameter sweep, restart or followup experiment.
+Native unused coupled outputs remain computed as in frozen C, without a loss.
+Independent scorer RNG seed+41000. Precomputed private order and augmentation
+plans shared by P1/P2; per-epoch model/dropout RNG hashes must match exactly.
+Source 180/class coordinates must match actual official get_sample_data.
+Train target uses P0 frozen candidate coordinates with dummy labels only.
+Historical candidate mask derives from nonzero target GT; this is disclosed,
+not claimed to be a GT-independent target-pixel sampling protocol. Actual target
+class values never enter optimization or model/checkpoint selection.
+Formal scoring: identical P0 pixels/order, all tail samples retained, eval batch128,
+running BN statistics. Target GT values loaded for offline scoring only after
+all six fixed100 predictions are frozen. P0 checkpoint/prediction hashes verified.
+P1-P0 measures a bundled protocol change, not any single-factor causal effect.
+P2-P1 measures official input adaptation and is never called our innovation.
+Report OA/AA/Kappa sample mean+/-SD, per-seed and per-class recall, confusion,
+prediction shares, collapse(max prediction share>=95%) and zero-recall separately.

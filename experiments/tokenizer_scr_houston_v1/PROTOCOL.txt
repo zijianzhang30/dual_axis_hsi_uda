@@ -1,0 +1,37 @@
+Houston SCR exploratory: K0officialC vsK1C+SemanticCenterRefinement. NoPavia mutations.
+Stage1seed2100,fixed100. Paired C/2100 epoch100 checkpoint,notC200,not target-best.
+Onlyif allfrozenStage1 gatespass,Stage2 seeds2100/2101/2102 full200fromscratch.
+SourceCEonly,unchangedFullJointBNmomentum.19,SGD.01,no momentum/decay/scheduler,
+batch128/domain,4tokens64D,depth3,13x13/48bands;originalsourceval/checkpoint cadence.
+V exactlycurrentC conv2d_features finalReLU output,grid13x13center(6,6),usedinWV.
+s_sem=channelL2normalized(stopgradV) dot itsnormalizedcenter;eps1e-6,dtypefloat32.
+Refinement usesexistingC scorer logits,s_final=s_spec+scr_beta[None,:,None]*s_sem[:,None,:].
+Only4unconstrainedscalarparams,beta0. NoMLP,newbranch,loss,GTmask,semantic supervision,
+MMD/EMA/pseudolabel/consistency/newTransformer. OriginalCrelationparameters unchanged.
+Preflight: allnativeparameterinitials equalC,betazeroW/T/train/eval logits<1e-6,
+actualexecutedCNN valueactivationhook (notunexecutedSequential wrapper),correctanchor,
+finitecosine,beta gradients,isolatedsemanticbiasbackward noCNN/scorergrad,BN/blockcounts,
+mainRNG draws equalC;all3seeds checked. Addedparams4,total378015.
+Main classification continuesordinaryCNN+relation gradients;onlysemanticcosine stopgrad.
+Source/targetsampleindicesexactC andall100/200epochs inputbatch,augmentation,CPU/CUDA
+pre-forwardRNGhashescheckedagainstofficialCsame seed. Noextra random vieworfeatures.
+Alltargetpredictionsfrozen beforelabelsusedinscoring/offlineGTmechanismdiagnostics.
+Fullnative52901target evalpixels;nativepaired(x,x),evalrunningBN,batch128,no paddingchanges.
+Mechanisms: sampleselectivitysameaspreviousreadonlyGTaudit,centerexcluded,GTunknown
+excludedfromknownconditionalmass,reflectpatchesexcluded;macroclassmetricprimary.
+Boundary=observed3x3 otherknownclass;target1836patches. Raw sameclassmass,knownmass,
+coverage andperclass/counts retained. GT neverintrainingorcheckpoint selection.
+T/Z separability L2normalizedfeatures,ownclasscentroidleave-one-out marginversus
+nearestotherclass;source-targetcentermetrics retained. Targetclass4only22supportcaveat.
+s_sem knownsame/differentneighbor distributions:centerexcluded,reflectionexcluded;
+mean/std/quantiles/percenterclass recorded. Allfeatures fromfrozen endpointcheckpoints.
+Stage1GO: OAorAA gain>=.5pp;other>=-.5pp;maxabsbeta>=.001;
+alltargetmacrosameclassconditionalmass gain>=.001 (0.1pp),boundarygain>0;
+Tmacro targetmargin OR Zmargin gain>0;no predictioncollapse(share>=.95) ornewzero-recall.
+Operational exploratorythresholds,no statisticalclaim,specifiedbeforetargetresults.
+IfNo-Go: noinitialization tuning,cosine edits,MLP,extra variantordataset.
+Stage2full200fromscratchavoidsunsafe loader/workerRNG recovery fromweightonly100checkpoint;
+first100ofseed2100repeat disclosed. NoautomaticPavia SCR evenifStage2positive.
+Compute: semanticdot10816MACs/patch,norm10816squares,plusnormalization/division/sqrt,
+beta4x169 multiply/add1352scalarops. NoextraCNN/Transformerforward. Runtime loadconfounded.
+Stage1 GPU3,conditionalStage2 GPU3/6/7. Code/snapshot/seed/config/hash locked.

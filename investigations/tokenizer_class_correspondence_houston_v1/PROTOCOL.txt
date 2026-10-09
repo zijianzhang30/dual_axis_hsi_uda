@@ -1,0 +1,11 @@
+Read-only Houston A/C class correspondence, fixed seeds2100/2101/2102, epoch200
+Primary T descriptor flatten K4xD64=256; Z final normalized CLS64. Secondary T_mean64 sensitivity check.
+Cosine score to each source class centroid; centroid is mean RAW descriptor of own2393 original source training samples then L2 normalized. All query vectors L2 normalized.
+Source heldout127 evaluated separately. Source centroids use no target features or labels. Source/target patches identical across A/C/allseeds; actual checkpoint and extraction hashes verified.
+Alternative mean of UNIT source features as centroid sensitivity check, fixed in advance.
+Describe target-class whole-centroid to source-class centroid cosine matrices, per-sample nearest-source class, per-class correct-vs-wrong margin, C6 versus C5 signed margin.
+Track SAME pixels T->Z for all GT C6, each model own final C6->C5 errors, shared C final C6->C5 mask across A/C, A/C recovered/introduced C6->C5 errors.
+Report both harm(6->5) and rescue(5->6); conditional final-error subsets alone cannot establish Transformer hurts all C6.
+No new training/module/loss/head; targetGT descriptive diagnostics only; no target-best, calibration, tuning or automatic followup.
+Cosine-prototype geometry is a descriptor probe, not a proof of linear/nonlinear separability or causal identification of a module.
+Pavia and all historical results untouched.

@@ -1,0 +1,10 @@
+Pavia LMMD-only and original/relation tokenizer control.
+Seeds2100/2101/2102;fixed100;no target-best.
+First C_LMMD,then A_LMMD independent of target scores;all6predictions frozen before scoring.
+Official LMMD at normalized classifier-input CLS64;weight0.3*logistic ramp unchanged.
+Original conv_a versus current frozen nonlinear center-relative scorer;all other modules/weights/streams matched.
+Retain3pairedviews and both unused projection heads to match CE/CE+LMMD+targetContrastive controls.
+No contrastive loss;unused heads gradNone and no SGD decay;parameter difference solely tokenizer3172.
+Inherited zscore+ILDA,180/class,11x11,bs32,38steps,SGD per-epoch reset and evaluation39348tailpad/trim.
+Historical targetGT candidate mask and native flip-axis issue remain disclosed,not silently changed.
+No new loss,LMMD coefficient sweep or automatic followup benchmark.

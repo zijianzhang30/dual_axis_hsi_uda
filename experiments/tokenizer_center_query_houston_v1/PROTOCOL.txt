@@ -1,0 +1,29 @@
+Houston matched Center Query exploratory: seed2100,Q0/Q1 fixedepoch100 only.
+C/2100 epoch100 reused checkpoint andevaluatednativepath; notC200.
+SourceCEonly,unchangedFullJointBN.19,originaldata/augmentation/SGD.01,batch128/domain,
+checkpoint/sourceval cadence;48bands,13x13,4relationtokens64D,Cscorerunchanged.
+Buildoriginalnative3layerC plusunusedEMAconstructor RNGdraws,installoriginalC tokenizer,
+retainfirstexistingTransformerblock,removeblocks1and2. No newtrainedprojection parameters.
+Q0=qCLS+originalCLS positionalembedding; Q1=Q0+actualCNN Vcenter(6,6).
+SharedqueryLayerNorm+nativefirstblockQprojection constitute f(Vc)/querymapping.
+Context=relationtokens+original4token positionalembedding. One8head cross-attention,
+keys/valuesonly4relationtokens; nativefirstblockprojections/dropout/FFN reused.
+Standardquery residual plusFFN,originalfinalLayerNorm+Linear64to7 classifier.
+Q1centerfeature hasnormalclassificationgradients; notstopgrad. No extraCNNbranch.
+Q0/Q1allparams/initidentical278427 versusC378011;99584paramsremoved versusC.
+Q0/Q1sameCPU/CUDA/dropout draws eachstep verifiedpreflight andall100epochs before scoring.
+Data/augmentation/input streams bothcheckedagainstC everyepoch. C3layerdropoutstream
+cannotbeexactlymatchedtoone-layerreadouts: documentedarchitecturaldifference,notclaimed.
+Preflight: initialCNN/scorer/nativefirstblock/classifier weights retained,centrepositions,
+queryBx1x64/contextBx4x64/attentionBx8x1x4;bothCNNBNcallsonce/pairedtrainforward,
+sourceCE CNN/tokenizer/readout/classifier gradients,targetinputgradientthroughJointBN;
+Q1 withcenterinputdisabled equalsQ0 logits<1e-6;matchingparams andRNG draws.
+Allendpoint predictionsfrozen beforetargetlabels scoring. No target-best,adaptation loss,
+MMD,EMA,pseudolabel,consistency orothercandidate. Pavia untouched.
+PrimarycontrastQ1-Q0;Q1-C referenceconfoundsdepth,parambudget,selfvs crossattention.
+Operationalcandidatepositive signal: OAorAA>=+.5pp,other>=-.5pp,no classcollapse.
+No automatic3seedstudy,center-onlytraining,architecturevariantsordatasetextension.
+PotentialQ1gain includescentre residualbypassaswellasqueryconditioning; contextreasoning
+notcausallyisolated. Center-onlyfollowuprequiresseparateuserinstruction.
+GPU3Q0/GPU6Q1;both100fromsameinit seed2100. Reportperclassrecall,OA/AA/Kappa,
+pairedQ1-Q0/Q1-C/Q0-C,sourceval,collapse/zero-recall,params/time. Single-seedexploratory.

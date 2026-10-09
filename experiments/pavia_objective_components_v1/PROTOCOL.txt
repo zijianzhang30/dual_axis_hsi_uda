@@ -1,0 +1,8 @@
+Ours Pavia objective leave-one-out. Fixed seeds2100/2101/2102,100 epochs.
+Reuse exact paired O_CE and O_AD from pavia_backbone_adaptation_v1;9 new removals only.
+All architecture,heads,3views,inputs,optimizer behavior and weights retained; only optimized term excluded.
+SGD reset each epoch as native;0.3*lambda LMMD,unit source/target SupCon,temp0.1.
+No targetGT values until all9 predictions fixed; target-best never computed.
+Same39348 evaluation pixels with native32pad/trim.
+Native flip B/C-axis issue and historical target-mask provenance preserved; no silent repair.
+Conditional leave-one-out effects are nonadditive; no new losses,variants,tuning or automaticfollowups.

@@ -1,0 +1,11 @@
+Independent Houston dual-path stem redesign
+C official original8-channel Conv3D; N0 capacity-matched dual absolute X/X; N1 dual absolute/center-relative X/R
+Each path Conv3D 1->4, kernel3x3x3 padding1 biasTrue; concatenate8; original BN3D/ReLU unchanged
+Existing Conv2D384->64 jointly mixes both paths; C tokenizer/three Transformer/sourceCE/FullJointBN .19 unchanged
+All variants378011 trainable parameters; stem224 parameters; no residual gate, no extra branch preserving old8channels
+R=(X-Xcenter)/(patchstd correction0+1e-6),13x13 center6,6, actual preprocessed/augmented patches
+Create replacement modules within independent CPU RNG(seed+72000); copy old first4/last4 Conv3D filters/bias, shared remaining params unchanged
+Data/order/augmentation and CPU/CUDA stochastic streams hash-asserted against C every epoch
+Stage1 N0,N1 seed2100 fixed100 fromscratch, GPUs7/6, fixed C2100e100 checkpoint baseline
+Go iff N1-C OA>0 AND AA>0; report N1-N0 separately. No target-best/sweep. Stage2 only if Go, paired N0/N1 seeds2100,2101,2102 fixed200, fromscratch.
+No Pavia modification/no new losses/no additional variants.

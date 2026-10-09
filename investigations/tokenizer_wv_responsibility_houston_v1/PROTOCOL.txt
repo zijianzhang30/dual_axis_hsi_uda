@@ -1,0 +1,14 @@
+Houston C W/V responsibility read-only diagnosis, epoch200 seeds2100/2101/2102
+All target52901 native ordered eval patches forwarded, runningBN/eval, target paired with itself exactly as native; analyze only GT C6 subset32264 per seed
+No training/weight/BN updates, no modules, no loss, no target-best, Pavia untouched
+Value V is actual postConv2D/BN/ReLU map64x13x13 used by T=W V; relationW4x169 actual tokenization
+Source class prototypes use each seed original2393source training subset, not heldout127. Value prototypes actual source CENTER V64; token prototypes flatten4x64. Raw source means thenL2normalize for cosine
+GT groups: center, known_same_C6_noncenter, known_C5, other_known_different, unknown. Unknown not assumed same/different.
+Primary GT interpretation uses non-reflected patches; all native patches reported as secondary. Value-probe border sensitivity excludes2pixel rim to retain full5x5 CNN spatial receptive field inside patch.
+Selection: averageW mass perGT group, center-excluded known conditional mass vs uniform known-neighbor composition; compare wrongC6->C5 vs correctly classifiedC6 and boundary subsets
+Value: sourceV-centroid nearestclass and signedC6-C5 cosine at GT knownsame positions, center, C5, unknown; weighted/unweighted ratios and valid-norm counts
+Projection: d=normalize(sourceTclass6)-normalize(sourceTclass5),256dim. For eachp contribution sum_k Wkp dot(Vp,d_k). Sum is exact numerator dot(flatT,d). Divide by original||T|| to reconstruct C6-C5 cosine margin.
+Counterfactuals frozenV and frozen source prototypes: original; zero knownother labels KEEPunknown; only GTknownsameC6. Per-token spatial re-normalization; center knownsame ensures positive denominator. Counterfactual judged at T only, not off-manifold Transformer/classifier accuracy.
+No fullVs persisted; perposition contribution/value-direction maps, GTlabels, coords, W-derived stats and CF tokens saved.
+Fixed rules/prototypes before label-based counterfactuals; GT offline only. Negative attribution is signed geometry, not unique causal proof separating jointly learned W and V.
+No automatic new experiment/design based on results.

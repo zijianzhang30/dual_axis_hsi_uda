@@ -1,0 +1,10 @@
+Houston center-conditioned CLS exploratory; independent experiment.
+CQ0: current C plus CLS+P(0); CQ1: current C plus CLS+P(Vc).
+P = Linear(64,64,bias=False), zero initial weights, independent RNG seed+51000.
+All original three Transformer blocks, tokenizer, Joint BN, losses, optimizer, batch128, patch13 retained.
+Only seed2100, fixed epoch100, no target-best; no automatic Stage2.
+Original source/target data, augmentation and CPU/CUDA random streams must match official C.
+CQ0 must reproduce C, projection stays zero; nominal parameter counts matched but active capacity differs.
+Primary comparison CQ1-CQ0; also CQ0-C and CQ1-C. Report per-class recall especially C6, source validation, collapse, projection norm/gradient, parameter/time overhead.
+Positive OA and AA are exploratory signal, not sufficient mechanistic proof or authorization for Stage2.
+Pavia repaired remains untouched. No new loss/module follow-up.

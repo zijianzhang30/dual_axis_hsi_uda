@@ -1,0 +1,7 @@
+Houston Center-CLS formal paired confirmation.
+Only CQ1 seeds [2100,2101,2102], from original initialization, 200 epochs, fixed final evaluation.
+Reuse completed C same seeds epoch200 only after provenance, sample indices, original/scorer initial hashes, all200 data/augmentation/CPU/CUDA RNG streams match.
+Architecture unchanged from validated exploratory: native C tokenizer and all3 Transformer blocks. CLS + P(Vc), P Linear(64,64,bias=False) zero initialized with independent RNG. Additional4096 parameters; sourceCE, Full Joint BN and optimizer unchanged.
+No target-best or tuning; no Pavia changes. Preserve existing results.
+Continuation gate predefined: OA>0 AND AA>0 on the same seed in at least2 of3 seeds. Report all seeds, perclass recall, collapse, zero recall, source-val, projection gradients/norms, parameter and wall-time overhead. This is candidate evidence, not proof of reasoning mechanism.
+If gate passes, authorized next stage is an independent normal BN target-free C vs C+Center-CLS experiment. It must train without target inputs, label access or target forward, with both arms using the same source-only protocol. No other module or loss permitted. Target-free preparation/launch cannot precede the completed formal gate.

@@ -1,0 +1,36 @@
+Houston exploratory target relation consistency, fixed before target scoring.
+C0 reuses official normalized center-relative nonlinear C, seeds2100/2101/2102,epoch200.
+C1 is identical plus .1*mean(B,K) sum_spatial KL(stopgrad(Wweak)||Wperturbed).
+Scorer/backbone/Full Joint BN unchanged; SGD.01,batch128/domain,depth3,4tokens64D,
+source-self CE and historical source validation/checkpoint cadence unchanged.
+Radiation perturbation: per-patch alpha Uniform(.98,1.02), plus pixel/band independent
+Gaussian noise beta=.005 (native formula, beta eightfold below native1/25).
+This has spatially varying noise, not merely shared band affine transforms.
+Augmentation RNG is separate CUDA generator seed+91000, preserving normal input order,
+normal augmentation RNG, CPU/CUDA main-forward dropout stream against fixed C each epoch.
+Only the relation scorer is evaluated for auxiliary views; no CNN, value, Transformer,
+pseudo labels, target labels, EMA, MMD, coupled branch, parameter additions, or new modules.
+C2 was implemented exactly as proposed: RI plus inverse-aligned horizontal/vertical
+flip relation KL. Odd13 central anchor and pointwise shared MLP already give exact flip
+equivariance mathematically. RE has no independent signal; nonzero gradient preflight
+requirement fails. C2 NOT LAUNCHED pending explicit redundant-control authorization.
+No substitute geometry, added positional layers or invented loss allowed.
+RI preflight: identity,coordinate mapping,anchor,aux-only scorer gradients,no CNN grads,
+actual BN/block counts unchanged,lambda0 main logits equivalence; source/target labels
+are not arguments of auxiliary API. Float tiny negative KL rounding is recorded honestly.
+Final metrics computed only after all C1 epoch200 predictions frozen; reference C0 final
+metrics reused, no target-best or tuning. Per-class recall,collapse(max class share>=.95),
+zero recall,params,training time and paired C1-C0 saved. C2 contrasts absent unless tested.
+At source validation points1,10,...200 save label-free current-batch relation diagnostics.
+Final common4096 eval patch probe indices frozen by seed72000; noise seed77700+chunk.
+Entropy normalized/log169,offdiagonal map cosine/JS,peak maxW,peak/uniform,top10 mass,
+RI KL/JS. Relation uniform collapse: allheads H/log169>.999 and169*maxW<1.05 in>=95%
+probe patches; identical-head collapse: mean cosine>.999 andmeanJS<1e-4 in>=95% patches.
+GO requires mean AND median OA/AA positive,>=2/3 same seeds both OA/AA positive;
+final matched-probe RI KL >=10% lower in>=2/3 seeds; no relation collapse inanyseed;
+source val OA drop<=1pp and source CE<=max(.02,2*matched C0 sourceCE) each seed.
+Thresholds are operational exploratory criteria, not statistical significance.
+Wall-clock overhead comparison is confounded by concurrent GPU load; parameters added0.
+Queue waits repaired Pavia completion before takingGPUs0/4/5; never modifies/interupts
+that experiment. No automatic Pavia extension even ifGO,lambda sweep,new aug ornew loss.
+No-Go means report negative result and stop.

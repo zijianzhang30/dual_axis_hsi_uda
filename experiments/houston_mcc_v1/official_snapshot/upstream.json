@@ -1,0 +1,11 @@
+{
+  "repository": "https://github.com/thuml/Transfer-Learning-Library",
+  "commit": "c4aa59eb565650a552b809411601d0589efbbfe4",
+  "paths": [
+    "tllib/self_training/mcc.py",
+    "tllib/modules/entropy.py"
+  ],
+  "resolved_branch": "master",
+  "commit_resolution": "git ls-remote refs/heads/master; GitHub API rate-limited",
+  "snapshot_is_fixed_not_floating": true
+}

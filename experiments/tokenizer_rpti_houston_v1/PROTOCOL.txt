@@ -1,0 +1,32 @@
+Independent Houston RPTI Stage1 seed2100 fixed100; paired original C/2100 epoch100.
+Stage2 onlyifStage1 frozen gate passes: seeds2100/2101/2102 fixed200, fromscratch.
+No epoch200-versus100 mismatch, no target-best, no additionalvariants orautomaticmodules.
+Native BiDA-self/sourceCEonly,48bands,13x13,4tokens64D,depth3,8heads,batch128/domain,
+SGD.01/no momentum/weightdecay/scheduler; existingFullJointBN momentum.19 unchanged.
+Original C tokenizer/scorer completely unchanged; reusedactual W givesdetached
+hatW=W/(L2norm+1e-6),R=hatW*hatWtranspose. No newrelationnetwork.
+Cache sourceR/targetR onceper pairedCNN/token formationforward; sameR reusedalllayers.
+Each existing attention layer adds8 unconstrained beta params initialized0.
+Add beta*R onlytoken-token5x5 logits region, allCLS row/column logitsbias0.
+Native source andtarget selfpaths modified; nativecrosspath logits/operations untouched.
+CLS-related logitsbias0 doesnot mean probabilitiesunchanged (softmax normalization).
+Lastlayerbetas havezero sourceclassificationgradient: finalCLS rowzero,no laterlayer
+readsmodifiedtoken rows. Keepall3layers asrequested; disclosezero final-layerbeta.
+Preflight beta0 train/eval logits<1e-6,alloriginalparameters exact,24betaonly additions,
+W/R/bias shapes,finite symmetricR,CLS0,beta gradientsfirstlayers,isolated biaspath
+no scorergradient; sameBNcalls/RNG draws. Addedparams378035 versusC378011.
+Alltraining epochscheck source/targetbatch+augmentationstream andCPU/CUDA RNG hashes
+againstofficialC atsame seed; originalcheckpoint/sourceval cadence unchanged.
+TargetGT onlyscore fixedendpoints afterallrequested predictionsfrozen; data protocolnative.
+Stage1 Go predeclared: OA orAA gain>=.5percentagepoints, other>=-.5pp,
+maxabsbeta>=.001, no predictioncollapse(share>=.95). No loss/lambda/architecturetuning.
+Bothcheckpoint100 finalscores andsame-pixel native eval pairing areused; sourceval from
+checkpoint100 history retained. BaselineC100 hasnot previouslybeen scored inthisstudy;
+itsfrozencheckpoint100 evaluatednow,not substitutedbyC200.
+Stage2 fromscratch ratherthanresumingweight-only100checkpoint: originalloader/worker RNG
+notstored inweightcheckpoint. First100ofseed2100 repeat disclosed; total3x200 authorized.
+Finalbeta perlayer/head,signfractions,attentionentropyall5rows/heads,Roffdiag distribution,
+OA/AA/Kappa,pairedseed deltas,recall,collapse,zero-recall,params/opcounts/time saved.
+Dense extra R2704MACs+normalization676squares,3*8*25beta multiply/add=1200scalarops/patch;
+noextraCNNorTransformerforward. Runtimecomparisons confoundedbyconcurrentGPUloads.
+Pavia repaired unchanged. Stage1 GPU3,conditionalStage2 GPU3/6/7. No automaticHyRANK.

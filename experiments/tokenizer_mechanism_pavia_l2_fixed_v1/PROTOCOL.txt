@@ -1,0 +1,22 @@
+Formal repaired-normalization Pavia mechanism verification
+A/B/C/F/G only, 102 bands,13x13, seeds2100/2101/2102,200 epochs fixed endpoint.
+Original SGD .01, batch128/domain, depth3,dim64,4tokens, dropout.1, source-self CE,
+unchanged Full Joint BN momentum.19; no adaptation loss, no extra modules.
+Scorer copied unchanged from capacity G; C/G Linear102x32 -> ReLU/Identity -> Linear32x4,
+3428 scorer parameters, total628571. Independently seeded initialization seed+41000,
+original model/unused EMA draw order retained.
+Frozen private snapshot: only Pavia load_scene repaired with original_shape and explicit
+image=flat.reshape(original_shape). Original raw snapshot/results never changed.
+Preflight and EVERY run: real MAT and actual loader on C/F layouts, fixed random4096
+nonzero pixels per domain, all nonzero norm max error<1e-5, normalized cube hashes locked.
+Any failure stops; no auto fix, restart or retry. Per-run snapshot/script hashes checked.
+Control A is run first per seed. All other arms compare each epoch's full augmented
+source/target input and label hash, CPU/CUDA pre-forward RNG hash with normalized A.
+Evaluation labels are consumed for scoring only after all15 epoch200 prediction files frozen.
+Original source-validation cadence and10epoch checkpoint budget unchanged; no target-best.
+Existing raw G continues naturally; controller waits before using GPUs0/4/5, one run/card.
+All old Pavia A-F/G classified RAW-INPUT DIAGNOSTIC ONLY in independent registry.
+Final reports: perseed OA/AA/Kappa,recall,collapse(max share>=.95),zero recall,params,time;
+C-A/C-B/C-F/C-G paired values, sampleSD and all-three-seed direction checks.
+No old raw scores enter any formal average. Negative findings reported without new variants.
+No HyRANK. No D/E training. No automatic follow-on experiments.

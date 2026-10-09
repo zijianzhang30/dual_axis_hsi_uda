@@ -1,0 +1,10 @@
+Houston C classifier read-only diagnosis; fixed seeds2100/2101/2102 epoch200
+Reuse hash-audited frozen source2520/target52901 Z caches, no CNN/Transformer changes, no training
+For each seed use its own original source train2393 indices, heldout127 separately; verify against official config index hash
+Heads fixed before target scoring: original linear Wz+b; no-bias Wz (bias isolate); cosine normalizeZ dot normalizeW (no bias, temperature1); source-centroid cosine normalize(mean source_train Z by class) dot normalizeZ
+No target fitting/calibration, no prototype target updates, no hyperparameter or checkpoint choice
+Analyze weight norm,bias,source/target perclass true vs bestother margin, C6 errors, predicted/true prior, sameZ paired changes
+Margin raw units differ across heads; compare sign/error rates and within-head source-target shift rather than equating raw scales
+Centroids trained source labels only; source heldout never included; target GT offline scoring only
+Current C uses FullJointBN target-aware training, diagnostic source-only head does not make entire model target-free
+No new model/loss/module automatically launched; Pavia untouched

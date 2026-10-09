@@ -1,0 +1,32 @@
+Pavia 2x2 network-package versus official MLUDA adaptation objective.
+Exactly M_CE,M_AD,O_CE,O_AD x seeds2100/2101/2102 x100 epochs, fixed100.
+Reuse P2 z-score + official ILDA inputs,source180/class,11x11,batch32,38updates.
+SGD.001/momentum.9/WD.0005 recreated each epoch, same as preceding P2/native MLUDA.
+All four groups use identical saved data order,main-view spatial augmentation,
+source samples,target coordinates and auxiliary radiation/flip views.
+All cells execute original/noise/flip paired forwards; CE controls omit all
+adaptation terms. Thus within-row BN counts and model RNG stay strictly matched.
+M: unmodified official DSANSS with native sequential BN and cross-domain readout.
+O: frozen C with Full Joint BN(.19),relation tokenizer and3 self Transformer blocks.
+O adds only two training projection Linear64->128/F.normalize, initialized with
+isolated seed+93000 RNG; the same heads exist in O_CE/O_AD. Inference ignores them.
+Classifier inputs are the aligned features: M288 and O normalized CLS64.
+AD retains exactly official LMMD/source SupCon/target pseudo-label SupCon,
+temperature.1 and CE + .3*annealed_lambda*LMMD + Con_t + Con_s.
+No GT target labels, EMA,distillation,new objective,lambda sweep or checkpoint search.
+Native flip on B,C,H,W reverses channels/batch WITHOUT label permutation; preserve
+and disclose this historical behavior in both networks; do not silently repair.
+Target sampling mask inherits P2 nonzero-GT mask provenance; class values never
+enter optimization,augmentation or checkpoint selection. Evaluation GT stays
+offline until all12 fixed100 predictions/checkpoints are frozen and audited.
+Formal evaluation: same39348 pixels/order,batch32,repeat-last pad only final tail
+then trim,all original tail pixels scored. M uses saved final source batch; O uses
+target,target. These are network-specific native readout semantics, fixed per row.
+Historical MLUDA91% uses other10 seeds/cadence/mask/denominator. Historical P268.68%
+uses a single geometry view, unlike the matched3-view CE control. Keep both separate.
+Rebuild all4 cells instead of mislabeling either historical score as paired control.
+Report OA/AA/Kappa,per-seed and per-class recall,collapse/zero recall,parameters,time,
+M_AD-M_CE,O_AD-O_CE,M_CE-O_CE,M_AD-O_AD,and objective-gain interaction.
+Row comparison is entire network+BN+readout package, not pure CNN architecture.
+AD comparison is official objective package, not individual LMMD/pseudo-label/Con attribution.
+No automatic followup experiments or new method design.

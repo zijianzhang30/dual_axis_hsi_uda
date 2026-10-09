@@ -1,0 +1,10 @@
+Independent Houston true source-only failure diagnosis. No new module/loss and no changes to Pavia.
+Arms A(original conv_a), C(current normalized center-relative nonlinear tokenizer), seeds2100/2101/2102;200epochs from scratch, batch128, patch13,SGDlr.01,sourceCE only.
+Ordinary BN(momentum.1), one source CNN forward/BN call per training step; single native self-attention path, all3 original blocks. No target loader, file read or forward during training. Normal running-stat evaluation; no target recalibration.
+Original source train/val indices retained. Keep18 full source batches/epoch (skip final partial batch) matching previous3600 updates. Source data and augmentation/random streams paired between A/C, not asserted identical to old source+target training.
+Epoch200 full native target evaluation is primary. All six training runs freeze before any target loading/evaluation.
+Read-only trajectory checkpoints predefined [0,1,10,50,100,150,200]; fixed GT-stratified target sample max256/class (rare class all22) and fixed source all2520 native pixels. GT only offline diagnostic. Sample OA is class-prior-weighted estimate, not official full-scene OA. No target-best/model selection/adaptive expansion.
+Record all200 source CE/val curves and BN running stats. Offline BN input/running-stat mismatch, V/T/Z norms/class-centroid geometry and margins, perclass recall/collapse across fixed checkpoints and seeds.
+BN channel identities differ across separately trained seeds; raw same-channel buffer distance alone cannot identify failure. Report normalized functional mismatch and aggregate distributions. Observational diagnosis cannot prove BN is the causal bottleneck.
+Historical 75.18+-10.55 is sequential source-target shared BN, NOT source-only; source val around71-75%, preserve and label accordingly.
+No stabilization module or follow-up training authorized in this round.
