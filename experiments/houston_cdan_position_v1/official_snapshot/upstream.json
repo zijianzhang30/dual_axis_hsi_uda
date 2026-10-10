@@ -1,0 +1,10 @@
+{
+  "repo": "https://github.com/thuml/Transfer-Learning-Library",
+  "commit": "c4aa59eb565650a552b809411601d0589efbbfe4",
+  "files": {
+    "entropy.py": "eaa05b3bc16122be33d4263643059deae499e3c6a97b344f6d56a228027dc5d3",
+    "grl.py": "b456616c71a35546dda035223731325b4c9f2c33a9d70c8d679f14ccf294fe13",
+    "cdan.py": "2c7c27afcab37b73727582826d53450f27a34659b715b540b78a84343011df96",
+    "LICENSE": "d9b9bdb8569b419dd891bfd269253fb946c08f6fa1b5ce96250992ffae6a0f4d"
+  }
+}

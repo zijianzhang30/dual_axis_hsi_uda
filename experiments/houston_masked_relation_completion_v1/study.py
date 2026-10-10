@@ -1,0 +1,18 @@
+import json,hashlib,importlib.util
+from pathlib import Path
+B=Path('/nas1/zhangzj26/dual_axis_hsi_uda/results');ROOT=Path('/home/zhangzj26/dual_axis_hsi_uda');OUT=B/'houston_masked_relation_completion_v1';SEED=2100;ARMS=('E1','E2')
+PLAN={'seed':2100,'epochs':100,'grid':list(range(10,101,10)),'E0':'reuse formal C seed2100 same100epochs/grid','E1':'CE + masked full-normalized-spectrum Huber reconstruction','E2':'CE + masked center-relative relation Huber completion','main':'unchanged formal FullJointBN+C+3SelfTransformer sourceCE; no additional classification path or adaptation loss','main_protocol':'normband per-pixelL2,13patch,48bands,batch128,SGD.01/momentum0/weight_decay0,persistent,18updates/epoch,source-val1/every10','mask':'24/48 bands uniformly without replacement independently perpatch; entire spatialband includingcenter; identical E1/E2 privateCPU-generator stream seed+157000','aux_input':'geometrically paired RAW observations masked beforevisible-only per-pixelL2; zero visible-norm uses denominator1; no epsilon dependence on hiddenvalues','targets':'E1 actual full Cpreprocessed augmented patch; E2 normalizedcenter-relative relations computed from samepatch using existingrelation_scores.relations; targets detached','counted_sites':'maskedbands x168noncenterpositions; source/target losses eachmean thenequal0.5average','decoder':'shared MLP Linear258->32/ReLU/Linear32->48; flattened postTransformer LN4x64 nonCLS tokens + fixed13x13 coordinate2; no fullviewW/V input','decoder_independent_RNG':'seed+159000 CPU fork, sameparams E1/E2; inference omitsdecoder','Huber_delta':1.0,'scale_calibration':'source-train first16samples perclass (112), existinglabels only, originalunaugmentedpatches; perband mean/std overnoncenterpositions; stdfloor1e-6; same scalar lambda rule acrossarms','lambda_rule':'fixed lambda=0.1*source_only_initial_CE_backbone_gradient_norm/source_only_initial_aux_backbone_gradient_norm; backbone excludes finalclassifier, decoder; fixedmask/privateRNG; no targetinput forcalibration; no optimizer update; initialstate/RNG restored','aux_BN':'detach.clone runningmean,var,tracked beforemainforward; swapBNbufferreferences tosnapshot,BNtrainingFalse inaux only; restorelive postmainbuffers andtrainingflags; affine/backbonegradient enabled','aux_randomness':'separate fork_rng CPU/CUDA with fixed seed+170000+globalstep; normal mainstream preserved','budget':'100epochs,1800optimizersteps; one normalmainpairedforward andone auxiliarypairedforward perstep; E1/E2 matched, E0 lacksauxcompute so reportoverhead','target_labels':'native historicaltargetnonzero candidate mask only; classvalues zero fortraining; GTscoringafterallpredictionsfrozen; notusedtocalibratescale/lambda','primary':'fixed100; target-best diagnostic same10checkpointgrid, AA/Kappa at OA-best','go':'E2 must improve OA/AA vsE0 andE1, inspect perclasscoverage;single-seed exploratoryonly; no automatic3seed orbenchmarkexpansion','new_trainings':2,'no_parameter_sweep':True}
+def sha(p):
+ h=hashlib.sha256()
+ with Path(p).open('rb') as f:
+  for a in iter(lambda:f.read(1048576),b''):h.update(a)
+ return h.hexdigest()
+def dump(p,x):Path(p).write_text(json.dumps(x,indent=2)+'\n')
+def module(n,p):
+ spec=importlib.util.spec_from_file_location(n,p);m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m);return m
+def env():return module('completion_frozen_native',B/'cross_benchmark_lmmd_v1/snapshot/common.py')
+def baseline():return B/'tokenizer_mechanism_v2/houston/C_2100'
+def verify():
+ env().verify_files()
+ for f in ('code_manifest.json','baseline_manifest.json')+ (('calibration_manifest.json',) if (OUT/'calibration_manifest.json').exists() else ()):
+  for p,h in json.loads((OUT/f).read_text()).items():assert sha(p)==h,p
