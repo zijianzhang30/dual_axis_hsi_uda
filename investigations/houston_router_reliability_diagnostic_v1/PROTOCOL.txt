@@ -1,0 +1,36 @@
+Houston router reliability V1. Frozen diagnostic; no training/backpropagation/tuning/follow-up.
+Original Joint BN+C seeds2100/2101/2102 epoch200. Reuse authenticated R0 and R1-R6
+predictions, source-centroid cosine scores, source-kNN vote counts/neighbors and native logits
+from houston_routing_signal_diagnostic_v1's pre-GT ALL_ROUTING_TRANSPORT_FROZEN gate.
+No previous GT score/report/availability files are accessed by construction.
+R0: top1-minus-top2 raw native logit margin; Shannon entropy natural logs, softmax T=1.
+Centroid: best-minus-second source-centroid cosine margin.
+kNN: (largest class vote minus second-largest)/k and largest class vote/k (neighbor agreement).
+All confidence definitions are router-native, irrespective of correctness; all k5/15 retained.
+Cross-stage agreement: seven-router pairwise equality, each router agreement with other6,
+agreement with routers from the other two feature stages (stage-balanced mean), matched-family
+centroid or kNN agreement with other two stages, and all-three-stage centroid/kNN agreement.
+R0 belongs to stage Z. R0 has no matched-family stage agreement. Do not conflate votes with
+independent evidence: centroid/kNN from the same stage are correlated.
+For each alternative R1-R6 and k, only samples where alternative != R0 are scored.
+Decile edges for each confidence on this unlabeled disagreement population are frozen before GT,
+np.quantile at .1,...,.9; ties stay together (searchsorted side=right), empty bins retained.
+The same fixed edges apply to C1/C7/confusion subsets: no GT-defined subset recalibration.
+No threshold, weights, rule, temperature, stage or k is selected by GT. No combined router.
+AUROC tasks: alternative correct vs incorrect on disagreements; R0 correct vs incorrect;
+beneficial override (R0 wrong, alternative right) vs harmful override (R0 right, alternative wrong).
+Raw-score AUROC and prespecified oriented benefit AUROC both reported. Alternative high
+native confidence/agreement favors beneficial; R0 high margin/agreement favors harmful;
+R0 high entropy favors beneficial. Orientations are hypotheses, never flipped using GT.
+Both-wrong disagreements are separately reported, never silently counted as harmful overrides.
+Report conditional alternative accuracy, R0 accuracy, beneficial/harmful/both-wrong rates,
+and beneficial fraction among single-correct (beneficial+harmful), for all frozen decile bins.
+Confidence distributions: n, mean/std, min/max, q10/q25/q50/q75/q90 by outcome category.
+All disagreement subsets plus every true class and directed native confusion pair, especially
+C1/C7, C1->C7, C7->C1, C7->C6. C7->C6 fixes R0 wrong, so beneficial-vs-harmful
+AUROC is undefined; alternative-correct-vs-both-wrong AUROC is informative and reported.
+All predictions/confidence/agreement/disagreement/quantiles for all seeds hash-frozen before
+opening target GT. Authenticate ordering, original checkpoint and source-vote reconstruction.
+Mean/sampleSD across seeds, per-seed/per-class CSV, all sample denominators and missing-AUC
+reasons. Do not pool raw margin values across seeds. AUC discrimination alone does not imply
+a safe operational threshold, calibrated confidence, or net classifier/transport improvement.

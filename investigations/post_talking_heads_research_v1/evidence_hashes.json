@@ -1,0 +1,5 @@
+{
+  "/nas1/zhangzj26/dual_axis_hsi_uda/results/houston_talking_heads_3seed_v1/summary.json": "881e13748a88198220b13872029815e72ecccf2f61a4a5a3587440b41744ccdb",
+  "/nas1/zhangzj26/dual_axis_hsi_uda/results/tokenizer_mechanism_v2/snapshot/normalization.py": "5b22a069a70880be5d1202c39267a1c9c792ad014f54576b2063b9cc1cdc7432",
+  "/nas1/zhangzj26/dual_axis_hsi_uda/results/tokenizer_mechanism_v2/snapshot/BiDA/models/BiDA.py": "576b6e40a756b18c2edabbd5876f3313f7bf05589eba7ba3ad0b1b5bcc09d5da"
+}

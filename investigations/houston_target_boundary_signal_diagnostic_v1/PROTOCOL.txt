@@ -1,0 +1,18 @@
+Small offline first-step check of proposed target-informed aggregate boundary signal.
+No main/selector training,backprop,temperature/threshold/boundary subset selection or auto-followup.
+OriginalC3seeds2100/2101/2102 epoch200,authenticate frozen source/target native logits from
+houston_routing_signal_diagnostic_v1 pre-GT gate; fixed coordinate/sample order and checkpoints.
+Unlabeled stable top1/top2 (ties lowest class ID),7classes ->21 unordered and42 directed pairs.
+Freeze all pair frequencies/rankings/top1-top2 margins/source reference distributions before GT.
+Rank by raw target unordered frequency, tie lexicographic class pair. Every prefix size1..21
+is predeclared descriptive output,not a search/selected boundary set. All21 pairs retained.
+GT only afterward: error true-vs-predicted unordered edge histogram; pair rank correspondence
+Spearman across21 edges; per-error true class equals top2; top2 oracle classification ceiling.
+For every prefix: aggregate GT error-edge coverage (GT true/pred pair present anywhere in
+prefix) vs local same-sample correspondence (true class actually its top2 and local pair inprefix).
+These differ: aggregation need not correctly identify an individual sample's true class.
+Report raw competition mass, conditional pair frequencies given top1 andmedian margins,
+perclass andC7->C6/C1->C7/C7->C1 local true-top2 coverage. Source target composition differences
+can dominate frequencies; activity is not a validated risk or causal boundary mechanism.
+Uniform random edge-set expected coverage m/21 is an analytical comparison,not random trials.
+No GT-guided weighting/subset/k/prefix/parameters or subsequent training. Reports3seed mean/SD.

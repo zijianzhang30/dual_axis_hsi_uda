@@ -1,0 +1,32 @@
+Houston transport factorization V1. Fixed before new target GT access.
+Offline oracle diagnostic only. No training/backward/tuning or auto follow-up.
+Original C Joint BN+C seeds2100/2101/2102, fixed epoch200 native raw CLS Z64.
+Hard factorization anchored to prior F1: predicted routing=original classifier argmax;
+pseudo target class statistics=raw mean of samples assigned by that same hard argmax.
+Source means use original2393 source training GT samples, not127 validation samples.
+Empty pseudo class uses prior fixed zero-offset fallback; no re-estimation or iteration.
+Authenticate/copy rawZ/head/native logits/predictions/coordinates/indices/source mask/labels
+and previous fixed_unlabeled_statistics plus F1_hard_routing against pre-GT freeze hashes.
+Recompute hard means/deltas without target GT; exact D00 feature replay of prior F1 required.
+Save/hash predicted means/routing, native inputs and D00 features/head predictions for all3
+seeds before opening target GT or Oracle G2 reference.
+Transport is always rawZ'=rawZ+(mu_source_c-mu_target_c). Frozen raw-CLS linear head only.
+D00 pseudo statistics + predicted routing (must replay F1).
+D01 pseudo statistics + oracle true-class routing.
+D10 oracle true-class target statistics + predicted routing.
+D11 oracle statistics + oracle routing (must replay prior Oracle G2 features/logits/predictions).
+After predicted-factor freeze, open target GT for explicit oracle branches and scoring.
+Prior G2 artifact access is after predicted-factor freeze and only checks D11 replay.
+Native identity F0 classifier is unchanged reference for original-correct/error subsets.
+All-target frozen classifier OA/AA, perclass recall, full confusion, recovery/damage rates
+and counts with denominators; C1/C7 and native C7->C6, plus all nonempty native confusion pairs.
+Same-seed effects: D01-D00 routing correction at pseudo statistics; D10-D00 statistics
+correction at predicted routing; D11-D10 routing correction at oracle statistics;
+D11-D01 statistics correction at oracle routing; interaction=D11-D10-D01+D00.
+Report OA/AA percentage-point effects,3seed mean/sampleSD and each seed; subset effects
+are recall/accuracy changes on identical native subsets, not separately selected samples.
+Large interaction means single-factor gains are conditional and not an additive causal split.
+Oracle GT routing/moments encode answers and same-evaluation-set moments are optimistic.
+This isolates only fixed one-step hard mean transport factors; no general routing/statistics
+dominance or identifiability claim for other estimators, soft variants or real domain causes.
+All branches are retained; no GT-based checkpoint/parameter/formal-method choice.

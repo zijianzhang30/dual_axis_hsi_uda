@@ -1,0 +1,37 @@
+Houston target cluster routing V1: frozen offline features; no network training/backpropagation,
+no hyperparameter search and no automatic follow-up. Original C JointBN+C seeds2100/2101/2102,
+epoch200. Source2393 train references only (exclude127 validation), target52901 fixed ordering.
+Authenticate/copy unitT256/Z64, source labels/train mask, target rawZ64/head/logits/predictions,
+coordinates/sample indices and D00 predicted_factors from prior pre-GT freeze manifests.
+Freeze inputs/hash before clustering. No old GT scores or oracle files opened in construction.
+T and Z independently: sample L2 normalize float64, standard Euclidean KMeans(K7,
+k-means++,n_init10,max_iter300,tol1e-4,algorithmlloyd,random_state0). All parameters fixed;
+internal best inertia across10 starts is unsupervised; no n_init/init/K/algorithm searches.
+This is ordinary KMeans on normalized samples, not spherical KMeans or spectral/GMM.
+Source class centroid = unit(mean of unit feature vectors over original2393 train references).
+Normalize fitted cluster centroids ONLY for matching; retain native centroids/assignments.
+Hungarian one-to-one matching on7x7 cost=1-cluster_centroid cosine source_class_centroid.
+Class routing is cluster_to_source_class[cluster_id]; no GT/class counts/purity participate.
+Freeze KMeans centers/labels/inertia/n_iter, source centers/cost/matching, routing, all
+counterfactual rawZ/logits/predictions across BOTH stages and ALL3 seeds before GT access.
+Cluster transport always acts on original native rawZ: z'=z+D00hard_delta[cluster route],
+even for T-based clustering. D00 pseudo means/statistics unchanged byte-for-byte. Frozen native
+raw-CLS classifier reads z', no normalization/re-estimated statistics or gate blending.
+D00 R0-routed features/logits must exactly replay prior factorization; original R0 identity
+reported separately. D01/D11 readouts authenticated and accessed only after all new results
+freeze and target GT scoring begins. They are oracle references, never clustering inputs.
+PostfreezeGT: cluster-class7x7 confusion, percluster size/purity/majority/assigned-source-class,
+size-weighted purity=sum rowmax/N and macro mean cluster purity; perclass fragmentation.
+Routing OA/AA/Kappa, correct fraction on R0 errors/correct, C1/C7/C7->C6 and all classes/pairs.
+Transport frozen-classifier OA/AA/Kappa,paired deltas vsD00/originalR0,original-error recovery
+and original-correct damage (counts/rates),routing class changes and net corrected counts.
+Signed oracle gap closure=(clusterOA-D00OA)/(D01OA-D00OA),likewise D11; no clipping negatives,
+no use to pick stage/parameters. If oracle gap<=0 the corresponding ratio is NA.
+Compare fixed previous source-kNN T/Z k5/15 and source-supervised G3 k5/15 readouts by
+authenticating same checkpoint/order after freeze. These are contextual frozen references;
+G3 was trained source-only previously, but this diagnostic fits no selector or main model.
+Three-model-seed mean/sampleSD,perseed/perclass CSV and descriptive figures. Cluster index
+labels arbitrary across seeds; never average raw cluster rows without a clear correspondence.
+GO: stage stable positive if transport OA exceeds D00 in ALL3 seeds. If neither T nor Z
+qualifies: No-Go. Report both stages,all metrics, no target-guided stage selection.
+Do not append GMM/spectral/differentK/initialization searches or additional training.

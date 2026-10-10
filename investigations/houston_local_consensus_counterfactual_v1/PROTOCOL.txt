@@ -1,0 +1,47 @@
+Houston local consensus counterfactual V1. Fixed before new target GT access.
+No training, gradients, backward, tuning, checkpoint choice or follow-up experiment.
+Joint BN+C original C, seeds2100/2101/2102, epoch200.
+Strictly authenticate and copy houston_local_support_diagnostic_v1 T/Z source/target
+features, coordinates/sample row indices, raw logits/predictions, original source
+training mask and original exact neighbor arrays against its pre-GT manifests.
+Check original checkpoint hashes. Cache features were eval/inference_mode/frozen BN.
+Source references: original2393 train samples, never127 validation samples.
+Target52901 historical eval samples, same ordering across all arrays and stages.
+Normalize features in float64; source references stay original, never consensus.
+Source GT may construct frozen source centroid/kNN predictions; target GT is prohibited
+until every seed's before/consensus features, neighbors and predictions are hash-frozen.
+T uses flattened4x64 token features; Z uses64 CLS. No new model inference.
+Stage={T,Z}; target neighborhood={standard_knn,nonoverlap_knn}; k_target={5,15};
+k_source={5,15}. Report the entire2x2x2x2 grid, without best-k/stage selection.
+standard_knn reuses exact original feature LOO kNN. nonoverlap_knn performs exhaustive
+feature cosine search after excluding candidates with center Chebyshev distance<=12.
+Coordinates must match original config and historical coordinate hashes. A common pad6
+translation leaves differences unchanged. Report reliability audit; never invent coords.
+If coordinates cannot be authenticated, report nonoverlap control unavailable.
+Consensus uses original target normalized feature q and ORIGINAL neighbor unit features:
+q_cons=unit(q+mean(neighbor_features)); coefficient1 fixed, no iterative diffusion.
+Neighborhoods are constructed before consensus, and are not reselected afterwards.
+Exact float64 GPU cosine top-k, ties by ascending reference row index. No ANN.
+Source predictions: centroid argmax cosine; source kNN unweighted counts argmax,
+ties by lowest class index. Correct-support flag uses strict plurality; ties reported.
+Do not feed unit-Z consensus into original raw-CLS classifier: normalization does not
+match its native input. No counterfactual classifier result is generated. Native frozen
+classifier only defines common correct/error/confusion subsets; logit margins unchanged.
+Freeze baseline/consensus unit features, target neighbors/cosines, source neighbors/cosines,
+source class counts, centroid scores, centroid/kNN predictions for all seeds before target GT.
+After freeze: source correct support=count_true/k_source; margin=(count_true-max_wrong)/k_source.
+Report all, original-classifier correct/error, each true class and each nonempty native
+directed confusion pair, with explicit C1/C7 and C7->C6 tables. No outcome-driven tuning.
+For original errors: recovery=count(baseline_margin<=0 AND consensus_margin>0),
+denominator both all original errors and original errors with insufficient baseline support.
+Source-kNN wrong->correct counts/fractions, and correct->wrong damage counts/fractions.
+For original correct samples: damage of strict source support, source-kNN classification,
+and centroid classification; denominators all subset samples and originally supported/correct.
+Report per-sample values and same-seed before->consensus changes, class macro, seed mean/sampleSD.
+neighbor_overlap_audit: original target neighborhood true-class purity, proportion of
+neighbors with Chebyshev<=12, exclusion counts/min-distance, and same-seed differences
+in purity/support recovery for standard vs nonoverlap. No causal attribution.
+LOO standard neighborhoods may contain overlapping/adjacent patches; nonoverlap excludes
+shared13x13 pixel footprints but not broader spatial autocorrelation or repeated materials.
+Source class imbalance, overlapping query neighborhoods and one scene pair limit interpretation.
+Offline target labels never choose k, fusion coefficient, stage, checkpoint or any parameter.

@@ -1,0 +1,44 @@
+[
+  {
+    "title": "Asymmetric Factorized Bilinear Operation for Vision Transformer",
+    "venue": "ICLR 2025",
+    "url": "https://openreview.net/pdf?id=MJyqwBVgMs",
+    "verified_scope": "Second-order spatial-channel factorized bilinear FFN replacement; RGB vision classification/OOD/detection, not our HSI UDA protocol."
+  },
+  {
+    "title": "One-Dimensional-Mixed Convolution Neural Network and Covariance Pooling Model for Mineral Mapping of Porphyry Copper Deposit Using PRISMA Hyperspectral Data",
+    "venue": "Photogrammetric Engineering & Remote Sensing 2024",
+    "url": "https://doi.org/10.14358/pers.24-00006r2",
+    "verified_scope": "HSI covariance pooling has prior art; mineral mapping task, not proof of cross-scene UDA performance."
+  },
+  {
+    "title": "Channel-Selective Normalization for Label-Shift Robust Test-Time Adaptation",
+    "venue": "CoLLAs 2024",
+    "url": "https://arxiv.org/abs/2402.04958",
+    "verified_scope": "Selective normalization under label shifts; TTA, not Full Joint BN/source CE UDA training."
+  },
+  {
+    "title": "AutoDIAL: Automatic DomaIn Alignment Layers",
+    "venue": "ICCV 2017",
+    "url": "https://arxiv.org/abs/1704.08082",
+    "verified_scope": "Learns degree of domain alignment at different layers; simple learned BN mixing is not unexplored."
+  },
+  {
+    "title": "A Closer Look at Smoothness in Domain Adversarial Training",
+    "venue": "ICML 2022",
+    "url": "https://proceedings.mlr.press/v162/rangwani22a.html",
+    "verified_scope": "Task-loss smoothness stabilizes adversarial training; does not establish that SAM/source CE will fix our results."
+  },
+  {
+    "title": "Unsupervised Domain Adaptation using Feature-Whitening and Consensus Loss",
+    "venue": "CVPR 2019",
+    "url": "https://arxiv.org/abs/1903.03215",
+    "verified_scope": "Feature whitening domain alignment already exists; not propose plain whitening as original contribution."
+  },
+  {
+    "title": "SATA: Spatial Autocorrelation Token Analysis for Enhancing the Robustness of Vision Transformers",
+    "venue": "CVPR 2025",
+    "url": "https://openaccess.thecvf.com/content/CVPR2025/html/Nikzad_SATA_Spatial_Autocorrelation_Token_Analysis_for_Enhancing_the_Robustness_of_CVPR_2025_paper.html",
+    "verified_scope": "Token autocorrelation/grouping before FFN on RGB ViTs; not recommend immediate token merging for our K=4 semantic slots."
+  }
+]

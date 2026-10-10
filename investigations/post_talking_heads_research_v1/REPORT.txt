@@ -1,0 +1,38 @@
+Post Talking-Heads research notes. Date: 2026-10-10. Research only; no new training launched.
+
+实际依据
+Houston TH2三seed Best OA 83.601444，TH0 83.570569；paired +0.030875 pp，AA +0.706083 pp，只有1/3 seed双提升。Fixed200 TH2 81.043837 vs TH0 82.033736，seed2102退化。TH2不是稳定增量。
+正式C仍是Full Joint BN + normalized center-relative nonlinear spatial tokenizer + 3 shared self Transformer，source CE。Pavia强CE+LMMD结果属于另外的冻结训练目标，不能与Houston CE任意拼接完整方法。
+
+代码事实
+tokenizer_mechanism_v2/snapshot/normalization.py: source/target concat后使用同一个BN，BN3D8通道、BN2D64通道，momentum .19；后者只是两次.1更新的衰减匹配，不是完整等价。
+BiDA/models/BiDA.py: dim64, 4 semantic tokens, 3 Transformer blocks,8heads。FFN实际hidden=int(dim*mlp_ratio)=256；mlp_dim=8是未被这个block使用的接口参数，不可误报FFN只有8维。
+C tokenizer改变的是spatial assignment W。T=W V 是加权均值；CNN非线性并不保证完全不编码方差信息，但加权均值映射本身是多对一的，不能唯一恢复被聚合特征的分布。
+
+候选1，优先级最高：relation-selected feature distribution是否提供额外类别证据
+对同一个W和V，mu_k=sum_p w_kp V_p；v_k=sum_p w_kp(V_p-mu_k)^2。v是64个learned CNN channel的方差，不是48个物理波段的协方差，也不等于可靠语义置信度。
+完整协方差为Sigma_k=sum_p w_kp(V_p-mu_k)(V_p-mu_k)^T；第一检查只用对角，避免直接使用4x64x64大表示。
+候选机制是利用被选择内容的分布，区分均值相近、内部混杂程度不同的上下文。既不是重新生成W，也不是把完整attention换一种打分。可以与relation spatial selection互补，也可能只能视为tokenizer的扩展而非独立第三贡献。
+本轮只提出，尚无证据证明本模型确实因丢弃二阶信息而掉分。方差可能主要含噪声/域外观，不能假定越大越坏，不能按target类别设计规则。
+最小后续检验：冻结现有C三seed，提取mean/diagonal variance；同一source train/val拟合读出，target标签最后做离线评价；比较mean-only、mean+variance、相同输入维度/参数预算的mean-only对照。先确定source-only规则，禁止target调正则或选特征。没有稳定额外收益就停止，不直接加covariance头或双线性FFN。
+如果后续进入训练，必须包含同宽、同非线性、同参数数的mean-only模块，区分新统计和一般容量；保持K/D/主CNN/Transformer预算。标准二阶pooling、AFBO本身都是已有方法，不能据检索宣称首创。
+
+候选2：区分类别组成与域外观的联合统计
+总体mu=sum_c pi_c mu_c，总体var=sum_c pi_c[sigma_c^2+(mu_c-mu)^2]。BN统计由类比例和类条件外观共同决定。
+这只说明风险存在，不能证明现有Houston/Pavia失败主要来自label shift；本任务也不能假设p(x|y)跨域不变。
+先用source labels改变source batch类别组成、固定像素池和评估查询，离线检测BN1/BN2统计、W/T/Z及logits敏感性；不更新已有buffers。目标GT只用于最终离线分组，不用于建立target-class-balanced batch/采样规则。
+若确认敏感性才讨论如何估计/限制组成敏感的统计。直接给BN加一个域mix scalar已有AutoDIAL先例，channel-selective已有CoLLAs2024先例。源域类别与域外观的分离本身也不是已证实可识别，不能提前宣称安全统计。
+该方向是在完善现有BN贡献，不能机械地另算第三个独立模块。
+
+候选3，低优先级：优化稳定性对照
+Task-loss smoothness/weight averaging有已有依据，不能作为原创模块。TH2 seed2102 Best84.045670但final79.248029支持检查训练轨迹，不证明sharpness原因。
+若后续验证SAM或参数平均，必须处理双forward带来的JointBN更新次数和随机流差异；平均权重必须source-only确定区间，重新估计BN时明确是否使用target，不按target-best调窗口。适应loss与sourceCE的SAM效果不能相互替代。
+
+明确不推荐
+不因现有RGB论文继续加TalkingHeads层数、Swin、DAT、SATA merging；只有4个语义slot，不是规则空间grid。
+不复活RI/RE、dual-token、RPTI、SCR、CLS/readout、prototype memory、普通LMMD/MCC/CDAN等已无稳定信号的候选。
+文献中TTA、few-shot、监督矿物识别、RGB ImageNet OOD均不能当作本设置的UDA实证。
+此次CASUAL关键词未检索到可核实的对应HSI原论文，不沿用历史文本中CASUAL/AAAI2025的模糊归属作为新论据。
+
+本次决定
+只研究建议，无新训练、无新模块实现，不改变Pavia及旧结果。最多保留候选1和2；候选3只是训练基线问题，不是第三创新。

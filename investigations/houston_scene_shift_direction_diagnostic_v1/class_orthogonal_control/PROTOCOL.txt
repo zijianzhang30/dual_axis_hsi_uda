@@ -1,0 +1,33 @@
+Class-orthogonal control added under Houston scene-shift direction V1. Parent is immutable.
+No training/backprop/parameter search/automatic follow-up; target GT never accessed.
+Use parent original C seeds2100/2101/2102 epoch200 native rawZ/head; all2520 source labels.
+Class discriminative subspace: columns mu_class_c-mu_global for all7 source classes;
+SVD left vectors, numeric rank at machine-epsilon*max(shape)*largest-singular-value, cap6.
+Global source mean and all class means calculated on the same2520 source population as parent.
+Only source GT determines class basis; no target labels/predictions or holdout-driven selection.
+Project original frozen mean rank1 and covariance rank4 bases by (I-Qclass QclassT).
+SVD residual -> requested-rank basis; reproject/QR cleanup, canonical signs. Random controls
+are EXACT16 parent global random bases, likewise projected/orthogonalized into same space.
+No artificial completion if a domain residual loses numerical rank; report degenerate/No-Go.
+Preserve all eps.02/.05/.10, per-sample radius eps*original rawZ norm and exact parent
+source-label-guided worst true-vs-strongest-competitor margin rule; no gradients/optimization.
+Both domain and random controls are adversarial, same rank, same norm, same class-orthogonal
+ambient subspace and same reference rows. Retain all16 random repetitions; do not pick any.
+Freeze copied inputs/class basis/projected bases/random bases; then freeze deltas/logits/
+predictions and hash before source scoring. Source GT allowed for class basis and attacks.
+Evaluate all source,original2393 train/127 heldout,and all7 classes, especiallyC1/C7/C6.
+OA/AA,true margin drop,before/after margin,flip; average random repetitions within seed first,
+then mean/sampleSD across3modelseeds. Before-vs-after ratio uses parent frozen perseed scores
+and the SAME paired random subspaces; ratios computed perseed then model-seed mean/SD.
+Report original and projected domain/random drops and ratios for every eps, plus ratio change.
+Class-between energy measured stably as norm(weighted class-mean deviations @ basis)^2 /
+norm(weighted class-mean deviations)^2; avoids spurious negative residual energy from trace
+roundoff. This should vanish by construction; validate class-basis orthogonality too.
+Report domain projection retained energy/rank/singular values, before/after classifier weight
+and within-class energy for semantic audit; class-between zero does not imply all semantics removed.
+Use SAME prespecified parent rule: domain mean margin drop > matched random-adversarial
+repetition mean +2 repetitionSD for ALL3 model seeds and ALL3 eps for a projected probe.
+If neither projected domain probe passes: robustness direction No-Go. No epsilon/rank/seed
+selection; no robustness model automatically trained even if a margin criterion passes.
+A projected-class control remains a source-defined empirical linear subspace; one scene pair,
+3optimization seeds,same-scene holdout and raw-feature perturbations limit generalization.

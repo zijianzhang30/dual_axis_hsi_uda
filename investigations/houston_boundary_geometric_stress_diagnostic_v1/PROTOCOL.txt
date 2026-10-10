@@ -1,0 +1,11 @@
+Frozen offline diagnostic, original C Joint BN+C tokenizer, seeds2100/2101/2102 epoch200. No training/backprop/tuning/followup.
+Use native raw CLS Z and original frozen affine classifier, no feature normalization (which would change the classifier geometry).
+All21 unordered pairs are fixed. Native cached logits determine top2, stable ties smallest classID. Recompute logits from raw Z to audit exact predictions and max error<2e-5.
+Distance to pair hyperplane: abs((w_a-w_b)^T z+b_a-b_b)/norm(w_a-w_b). This is distance to the infinite pair equality hyperplane, not necessarily the closest active multiclass decision boundary.
+Target distance population: samples whose original top2 equals that pair. Source population: all2520 frozen source samples with GT in {a,b}, pooled; also report each side separately. Source GT is permitted; target GT is unopened during construction.
+Distribution summaries: count,min,p05,p25,median,p75,p95,max,mean,std(ddof1). Save per-sample all-pair distances.
+Primary ratio=target median/source pooled median (ascending = higher stress). Stress=source pooled median/target median (descending). These are reciprocal, not two independent hypotheses. Frequency descending separately. No combined score, clipping, threshold or GT-based choice.
+Zero target count/zero medians: report undefined and sort missing last; no arbitrary epsilon. All pair normal norms must be positive. Ranking ties lexicographic pair order.
+Freeze/hash all inputs, distances, statistics and three seed rankings before target labels are read. After freeze validate labels against historical array hash and coordinate-indexed target_GT.
+Score across all21 pairs: Spearman frequency vs true error count; stress vs true error count; ratio vs true error count (inverse sign). Top3 aggregate true-error-edge coverage for each ordering, predefined Top3, no search. Error edge={GT,original prediction}, excludes correct samples. Report same-sample top2 match separately.
+Report per-seed, per-pair and3seed mean+/-sampleSD; focus predefined C5/C6,C6/C7,C4/C6. Source side asymmetry and class composition are interpretive limits; no inferred direction of boundary movement or training benefit.

@@ -1,0 +1,49 @@
+Houston source-supervised router V1. Main original C is FROZEN. Only tiny selector trained.
+Fixed seeds2100/2101/2102 epoch200. Source reference2393 original training pixels,127 fixed
+holdout pixels excluded from source reference and selector fitting. All source views share
+their origin's split. Final target52901 uses historical frozen ordering/routers/CLS/head.
+Source pseudo-shift views fixed: identity; low affine(scale.9,band sinusoidal gain+.04,
+offset cosine+.015,noise sigma.005); high affine(scale1.1,gain-.04,offset-.015,noise.005);
+mild spectrum(scale1,gain .03*cos(4pi b/47),offset .01*sin(2pi b/47),noise.01).
+Applied to existing normband cube patches, no clipping, Gaussian noise generated with fixed
+20261011 +10000*view+sample_index seeds, same across original-model seeds. No strength search.
+Frozen eval BN, original CNN JointBN/tokenizer/Transformer/head, inference mode, all weights
+requires_grad=False. Fresh source identity/shifted extraction; identity must match old cache.
+Source routers: unitV10816/T256/Z64 cosine centroids and exact kNN5/15, native rawZ head.
+For every source query (train or holdout, every view), remove source reference patches with
+Chebyshev center distance<=12, INCLUDING its own unperturbed reference. Class centroids
+use only eligible original training references; no validation references. This prevents
+self/overlapping-patch label copying; remaining ordinary source spatial correlation is a limit.
+Target routers strictly replay previous R0-R6, without this within-source spatial exclusion.
+Input41 dimensions: R0 logit margin/entropy;3 centroid margins;3 kNN vote margins and3
+neighbor agreements;21 router equality indicators;7 stage-balanced other-stage agreements;
+2 matched-readout all-stage agreements. NO class ID,GT,correctness or raw class predictions
+as MLP inputs. Unlabeled predictions are used only to compute equality/confidence and to
+apply the chosen router after selector decision. Source-only input standardization.
+Tiny shared Linear(41,16)+ReLU, gate Linear(16,2), alternative Linear(16,6),808 parameters.
+Train60 fixed epochs,batch256,Adam(lr.001,weight_decay.0001),last epoch only, no early stopping.
+Gate CE labels: keep if R0 correct or no alternative is correct; override only if R0 wrong
+and at least one alternative is correct. Alternative partial-label CE on recoverable errors,
+-log sum of softmax probability over correct alternatives (allows multiple valid routers).
+No class weighting or confidence threshold. Two stages: gate argmax keep/override; only
+override chooses alternative head argmax R1-R6. Gate/alternative loss weights fixed1/1.
+Optimizer contains only selector parameters; frozen features detached. Source holdout is
+diagnostic ONLY, never used for epochs,architecture,augmentation or any parameter choice.
+Both k5 and15 independently prespecified; fixed selector random seed main_seed+30000+k.
+G0 original native R0 identity, no transport. D00_R0 additional unchanged-statistics baseline.
+G1 fixed6-alternative majority R1-R6 unique plurality,highest-count tie fallbackR0.
+G2 highest native-confidence source-ECDF percentile amongR0-R6,ECDF fitted on all source
+training views WITHOUT labels; tie favorsR0 then index. ECDF addresses different margin scales.
+G3 source-supervised learned two-stage selector. No confidence/routing mixtures or k selection.
+G1/G2/G3 counterfactual rawZ=rawZ+D00_hard_translation[selected class]. Pseudo target
+class statistics copied byte-for-byte from D00; no re-estimation under new routes.
+All source training completes without target GT. All target inputs,router/gate decisions,
+features,transport logits/final predictions across BOTH k and ALL seeds frozen+hashed before GT.
+GT scoring only afterward: final classifier/routing OA/AA/Kappa,paired deltas vs originalC,
+original error recovery/correct damage,keep/override and changed-class rates,beneficial/harmful
+override counts plus unchanged-route-vs-override accounting;C1/C7/C7->C6 and all classes/pairs.
+Oracle-selector availability fromR0-R6 only after target scoring, never a training input;
+this is a routing availability ceiling, not transformed-classifier OA upper bound.
+GO criterion fixed: G3 final-classifier OA positive vs originalC on every seed at BOTH k;
+otherwise No-Go. Report AA,Kappa and damage regardless; no post-hoc k/best-router choice.
+No-Go stops this run. No automatic additional gate/training/augmentation experiments.

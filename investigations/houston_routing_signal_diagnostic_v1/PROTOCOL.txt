@@ -1,0 +1,34 @@
+Houston routing signal V1. Fixed before new target GT access. No training/backward/tuning/follow-up.
+Original C Joint BN+C seeds2100/2101/2102, epoch200. Native rawZ/head/logits from hard
+factorization pre-GT freeze; unitT/Z from local-support pre-GT freeze; unitV full map from
+class-geometry pre-GT freeze. Authenticate checkpoints, file hashes, coordinates and source split.
+Reference source2393 train only, exclude127 validation; target all52901 same row ordering.
+Sample descriptors: Vflatten10816, Tflatten256, Z64; float64 L2 normalization for cosine.
+V files strictly authenticated/hard-linked to immutable previous cache to avoid7GB copies;
+read only, verify hashes before/after. No cached offline GT scores are opened for router construction.
+R0 original Z classifier argmax (native raw CLS, exact replay).
+R1 Z centroid: unit mean of unit source-class vectors; query cosine argmax.
+R2 Z source-kNN: unweighted votes, exact cosine neighbors k5/15.
+R3 T centroid, same source-unit mean convention.
+R4 T source-kNN k5/15.
+R5 V centroid andR6 V source-kNN k5/15 are prespecified auxiliary signal diagnostics.
+Centroid ties and kNN vote ties use smallest class index; exact cosine ties use source row index.
+Source GT constructs all readouts. Target GT not opened until all routers, votes, majority,
+counterfactual features/logits/predictions and indices/neighbors across3 seeds are hash-frozen.
+Two fixed majority routers: for each k, voteR1,R2(k),R3,R4(k); unique most-voted class wins,
+including unique plurality2-1-1; multiple classes tied for highest count fallbackR0.
+No confidence threshold, router weight or GT-based k/stage/rule selection. V excluded from majority.
+Fixed D00 source means and pseudo target HARD class means reused unchanged, authenticated
+against prior predicted_factors.npz. No re-estimation using alternative router/majority predictions.
+Transport rawZ'=rawZ+fixed_delta[majority_route]. Frozen original raw-CLS head classifies it.
+D00 baseline usesR0 routing and must replay prior F1/D00 features/logits/predictions exactly.
+After freeze: routing OA/AA, perclass and native-correct/error/confusion subsets (C1/C7/C7->C6).
+Primary oracle-selector unionR0-R4 reported separately for k5/15; auxiliary unionR0-R6 separate.
+Union is label-assisted routing availability, not deployable router and not transformed classifier accuracy.
+On R0 errors: each router accuracy, directed pair extra coverage|correctA & wrongB|/|R0errors|,
+pair intersection/union, pair conditional coverage, unique correct vs all other primary routers,
+correctness bitmask pattern counts. Report primary/auxiliary union OA/AA and error coverage.
+Majority transport classifier OA/AA, original error recovery/correct damage, and same-seed delta
+vsD00; all/class/confusion subset rates and counts. R0 classifier is the fixed subset anchor.
+Report3seed mean/sampleSD, perseed deltas, ties and candidate correlation; no causal/significance claim.
+Only one scene pair; overlapping source/target patches and highly correlated routers limit interpretation.

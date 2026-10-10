@@ -1,0 +1,43 @@
+Houston local support diagnostic V1. Fixed before new diagnostic target GT access.
+Original Joint BN+C, seeds2100/2101/2102, fixed epoch200. No training or follow-up.
+Authenticate prior houston_class_geometry_diagnostic_v1 frozen extraction manifest,
+checkpoint hashes, native prediction replay and unchanged eval model/BN state.
+Independently copy its source/target sample-L2-normalized T256, Z64, native raw logits,
+predictions, and coordinates into this diagnostic, then hash-freeze all three seeds.
+Prior feature cache was obtained in eval/inference_mode with frozen Joint BN.
+Cached features are reused, not a new forward or new checkpoint selection.
+Labels/GT are not opened during copying or nearest-neighbor search.
+Source reference pool uses original2393 training samples, excluding127 validation samples.
+Authenticate source mask against original coordinate hashes for each seed.
+Target reference/query pool contains all52901 historical evaluation samples.
+Exact cosine nearest neighbors, k5 and15, unweighted votes; normalize cached vectors
+again in float64 for cosine computation. Exhaustive GPU float64 inner products.
+Exclude query's own target sample index before top-k. No spatial exclusion or radius.
+Break exact cosine ties by ascending reference index, without label access.
+All neighbor indices/similarities are additionally frozen before GT scoring.
+Source class counts per query, correct-class support=count_y/k;
+source support margin=(count_y-max_wrong_count)/k.
+Target leave-one-out purity=count_y/k; target plurality margin likewise reported.
+Original classifier decision margin=logit_y-max_wrong_logit; predictions/logits remain native.
+The original classifier reads Z only. Its margin is a shared outcome anchor for T/Z,
+not two separately measured stage classifiers. No classifier is fit to T.
+Fixed original classifier correctness defines all/correct/error subsets identically atT/Z.
+Report all7 true classes, all42 nonempty directed confusion pairs, and C1/C7 subsets.
+Top5 confusion pairs by native counts perseed are presentation summaries only, not tuning.
+Main kNN labels used only after the all-seed cache/neighbor freeze gate.
+Error flags (overlapping): source-local-support error=source margin<=0;
+target-local-mixing=target plurality margin<=0; classifier-boundary disagreement=
+native classifier wrong while both source and target local margins>0.
+These labels describe disagreement, not causal error explanations.
+Ties are separately reported; <=0 conservatively includes ambiguous plurality.
+Exclusive error partition: source-support error first; then target mixing when source
+support>0; then boundary disagreement when both local margins>0. Order is fixed here.
+Report overlap contingency and exclusive stage transitions to reveal priority dependence.
+Report source support/purity/logit means, quantiles, competitor compositions, macro
+over7 true classes, perclass/perconfusion/subset, sample micro and three-seed mean/sampleSD.
+Save every target sample's neighbor indices/cosines/counts/margins/flags/category/competitor.
+Target GT remains offline interpretation only: no training, checkpoint/parameter choice.
+No threshold sweep, no model/loss changes, no auto-started later experiment.
+LOO removes self only; overlapping patches/spatial autocorrelation may inflate target purity.
+Class imbalance affects source votes. Correlated neighbor votes are not probabilities.
+Only one transfer pair and three optimization seeds; no causal/significance/generalization claim.

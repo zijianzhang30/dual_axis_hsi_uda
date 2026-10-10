@@ -1,0 +1,38 @@
+Houston class geometry diagnostic V1. Fixed before extraction/scoring.
+No training, no parameter/buffer update, no target-driven selection, no follow-up.
+Original C: tokenizer_mechanism_v2/houston/C_{2100,2101,2102}/checkpoints/epoch_200.pth.
+Use original frozen snapshot, Full Joint BN+C, native eval forward, inference_mode.
+Use previously frozen normalized cubes/coordinates from tokenizer_stem_value_diagnostic_v1/data.
+Coordinates define the historical evaluation pool; no labels are opened during extraction.
+Source pool: 2520 original source samples; source centroids use fixed original training mask (2393).
+Target pool: all 52901 official evaluation pixels in historical coordinate order.
+Primary descriptors: V=post-conv2d Joint-BN/ReLU full64x13x13 map flattened10816;
+T=4x64 pre-CLS/pre-position semantic tokens flattened256; Z=post-final-LayerNorm CLS64.
+Normalize each entire sample descriptor by L2 norm, eps1e-12. Preserve native raw logits,
+since normalized logits would change the requested native decision margin.
+All three seeds' source/target descriptors, logits, predictions and coordinates are
+saved and SHA256 frozen before any target GT/label file is opened by this diagnostic.
+Audit native predictions against historical predictions_200.npz (contains no GT),
+native tokens and raw logits within2e-5, checkpoint and model state unchanged.
+Pre-GT extraction attempt observed3.8146973e-6 max logit roundoff with exact argmax;
+1e-6 replay check revised to2e-5 before GT access. Failed attempt retained separately.
+Offline labels must match frozen coordinate/label hashes. Target GT is only used
+for the following fixed diagnostics, not fitting/selecting any deployable model.
+Unit-vector arithmetic class mean m_c, unit centroid u_c=m_c/||m_c||.
+Intra scatter: mean||x-m_c||^2; also report mean(1-x dot u_c).
+Target nearest-class margin: x dot u_y minus max wrong-class target centroid cosine.
+Its correct-class centroid excludes that sample (LOO); wrong-class centroids do not contain it.
+Also report full-centroid margin explicitly as a self-including diagnostic.
+Target->source margin: x dot source_u_y minus max wrong source cosine.
+Source-centroid target classification: argmax source centroid cosine (source-train only).
+Target LOO centroid oracle classification: argmax target cosines with own sample removed.
+Z native decision margin: logits_y minus max wrong logits; no logit renormalization.
+Source-target centroid cosine matrix: rows target classes1..7, columns source classes1..7.
+Report sample-level per-class metrics, unweighted class macro, pixel micro, seed mean/sampleSD,
+confusions, matrix per seed and mean, and paired V->T->Z per-class/macro transitions.
+Positive scatter delta is deterioration; positive margin/recall delta is improvement.
+Centroid class correspondence is descriptive, not proof of full separability or stage causality.
+V/T/Z have unequal dimensions and pooling; report signs/recall as well as numerical margins.
+LOO removes direct self-inclusion, not spatial dependence or overlap of neighboring patches.
+Rare target C4 has22 pixels; three seeds are optimization repeats, not independent scenes.
+Output in project results/houston_class_geometry_diagnostic_v1, no NAS writes.

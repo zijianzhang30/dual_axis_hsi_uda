@@ -1,0 +1,40 @@
+Houston unsupervised transport feasibility V1. Fixed before target GT/oracle reference access.
+Original C Joint BN+C, seeds2100/2101/2102, epoch200. No training, gradients/backward,
+optimizer, temperature/threshold/weight/k selection, pseudo-label iteration or later experiment.
+Authenticate and independently copy native input freeze from houston_oracle_transport_diagnostic_v1:
+raw source/target Z64, raw logits/predictions, frozen nn1 head, coordinates/sample indices,
+original source train mask and source labels. Reference source2393 train, excluding127 validation.
+Verify raw CLS native classifier prediction replay exact, max logit error<2e-5; checkpoint hashes.
+Transport in raw CLS space. Frozen head reads raw counterfactual Z; source cosine kNN
+normalizes query/reference separately in float64; k_source5/15 both retained.
+Source class mean from original train GT. Target assignments from original frozen classifier only.
+p_ic=softmax(original native logits_i)_c with T1; hard assignment=original native argmax.
+Hard target mean per class from assigned samples; soft target mean=sum_i p_ic z_i/sum_i p_ic.
+Zero hard assignment mass: target mean set to source mean, yielding zero translation;
+report missing classes, never invent samples or use target GT. Soft zero mass likewise zero offset.
+F0 identity.
+F1 one-step hard assignment class mean transport z_i'=z_i+delta_hard_argmax_i.
+F2 one-step soft transport z_i'=sum_c p_ic*(z_i+delta_soft_c)=z_i+p_i@delta_soft.
+F3 all7 hypotheses h_ic=z_i+delta_soft_c; use the same means asF2 to isolate routing.
+Score s_ic=frozen_head(h_ic)_c (raw logit of hypothesis class). r_i=softmax(s_i), T1.
+Fuse z_i'=sum_c r_ic h_ic. No confidence threshold or original/consensus fusion coefficient.
+Store all hypothesis features/logits, routing, target means/masses, transforms, frozen
+head/kNN predictions and neighbor arrays, all seeds, before opening target GT.
+For linear head w_c,b_c, s_ic=frozen_head(z_i)_c+w_c dot delta_soft_c: fixed class-bias
+reweighting of original evidence. Verify algebra; F3 is not independent semantic evidence.
+No recomputation of target statistics from F1/F2/F3 predictions; no pseudo-label updates.
+After all unsupervised artifacts hash-freeze, authenticate/copy prior Oracle G2 features
+and readouts for reference ONLY. Do not open G2 or target class moments during F construction.
+G2 uses true-class routing/means; oracle reference, not a strict mathematical upper bound.
+After freeze/reference authentication, load target GT for metrics and estimation/routing audits.
+Report frozen classifier OA/AA/Kappa, source-kNN OA/AA/Kappa at5/15, correct support/margin,
+native error recovery and native correct damage, all/trueclass/confusion subsets (C1/C7/C7->C6).
+Same-seed differences and3seed mean/sampleSD for everyF andG2, no best configuration selection.
+Oracle-gap fraction=(Fmetric-F0metric)/(G2metric-F0metric), perseed, no clipping; NA if zero gap.
+Offline centroid audit: hard/soft assignment counts/masses/purity, true target centroid
+estimation error and translation-direction agreement vs G2 class moments. GT is audit only.
+Routing audit: true-class mass/argmax accuracy before versus F3 for fixed native subsets;
+hard/soft routing confusions and class masses. No audit feeds back into construction.
+Different estimated class statistics and routing are intertwined; no unperformed oracle ablation
+is implied, and failure cannot uniquely prove which element caused every error.
+One scene pair,3 optimization seeds; C4 has22 target pixels. No causal/significance claim.

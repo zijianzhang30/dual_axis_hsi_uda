@@ -1,0 +1,49 @@
+Houston scene-shift direction V1. Frozen original C3seeds2100/2101/2102 epoch200.
+No network training/backprop/tuning/automatic follow-up; target GT NEVER accessed.
+Native raw CLS Z64 and head authenticated from original frozen pre-GT factorization cache.
+Direction construction uses source ALL2520 and target ALL52901 features without source or
+target labels/predictions. Original classifier weights only used later for source perturbations.
+Separate input/direction freeze before reading source GT; source GT is allowed solely for
+the requested worst-case direction selection and subsequent descriptive scoring/semantic audit.
+Global mean: d=unit(mean(target)-mean(source)); span rank1. Harmful sign chosen source-label
+conditionally; this may be opposite actual target-minus-source direction. Positive mean direction
+is reported separately as D_mean_forward, without any sign choice.
+Lowrank: independently center both unpaired domains. Compute unbiased C_s=Xs'Xs/(Ns-1),
+C_t=Xt'Xt/(Nt-1); SVD(C_t-C_s),take top4 LEFT singular vectors. This is covariance discrepancy,
+not a fictitious pointwise difference between unpaired source/target rows or pooled PCA.
+Singular values use descending absolute covariance-change magnitude, retaining positive and
+negative variance-change directions. Canonical signs largest-absolute component positive.
+Fixed eps .02/.05/.10, per-sample rho=eps*norm(original rawZ). No post-perturbation normalization.
+Controls within each probe: D_domain exact worst source true-vs-strongest margin in its span;
+D_random isotropic per-sample random directions; D_orthogonal normalize(random minus its
+projection onto that probe's domain span). Same rho,paired base random draws.
+Fixed16 random repetitions,all retained/averaged,none selected. Same deterministic random
+draws across original-model seeds. D_domain_random=random direction within domain span,
+without label-guided direction selection. For fair adversarial-selection control ALSO use
+D_random_subspace_adversarial:16 fixed global isotropic orthonormal subspaces of SAME rank
+(1 or4), exact SAME source-label-guided worst-margin rule. This controls dimensionality and
+the source-GT worst-direction advantage that plain-random comparisons do not control.
+For linear head f(z)=Wz+b exact attack uses min over c!=y of original pair margin minus
+rho*norm(P_B(W_y-W_c)). Choose minimizing competitor,delta=-rho*unit(P_B(W_y-W_c)).
+Competitor can change with epsilon. Exact margin identity checked; no gradient or optimizer.
+All bases/random draws/deltas/perturbed logits/predictions/indices frozen+hash before scoring.
+Source GT used for adversarial construction; target GT not needed and never opened.
+Report all2520 primary plus fixed2393 train/127 heldout origin subsets; perclass/all/split,
+C1/C7/C6 in particular. All eps/probes/controls retained. Source baseline may have training
+optimism; heldout127 is same-scene, spatially correlated, not an independent scene/domain.
+Metrics OA/AA,true-vs-strongest margin mean/median/q10,flip rate,paired domain extra mean
+margin drop/flip/OA damage vs random/orthogonal AND same-rank adversarial random controls.
+Average16 repetition outcomes WITHIN each model seed first,then3modelseed mean/sampleSD.
+Report repetition SD separately; random repetitions are not independent trained-model seeds.
+Direction semantic audit after source GT: energy captured from source between-class scatter,
+within-class scatter,and centered classifier weight matrix; compare fixed random subspaces.
+Distribution discrepancy can reflect class proportions/semantic structure as well as scene
+nuisance. Special margin sensitivity does not itself identify a nuisance direction that should
+be suppressed, nor establish robustness-training benefit.
+Prespecified clear directional-margin evidence: D_domain mean margin drop > matched-rank
+random-adversarial mean +2 repetitionSD for ALL3 model seeds at ALL3 eps for a probe.
+Classification-flip evidence separately: domain flip > matched-rank random-adversarial mean
+at fixed eps.10 for ALL3 model seeds. If neither probe has clear directional-margin evidence:
+No-Go; if any passes, report only Go-for-margin-diagnosis and whether flips also support it.
+These are descriptive consistency criteria, not a p-value/significance/generalization test.
+Do not automatically train robustness models or search eps/rank/random seed/scene directions.

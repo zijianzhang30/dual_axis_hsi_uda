@@ -1,0 +1,43 @@
+Houston oracle transport V1. Fixed before new target GT access.
+No training, backward, optimizer, tuning, checkpoint choice or follow-up.
+Original C Joint BN+C seeds2100/2101/2102, fixed epoch200.
+Raw native post-LayerNorm CLS Z64 from tokenizer_stem_value_diagnostic_v1 cache.
+Authenticate rawZ by L2 direction against houston_local_support_diagnostic_v1 frozen
+Z and by reconstructing raw logits using checkpoint nn1.weight/bias; argmax must
+equal cached native predictions for source/target, maximum raw-logit error<2e-5.
+Copy rawZ, original unitZ, raw logits/predictions, source/target coordinates and
+indices, head parameters, source train mask/source labels; hash-freeze all3 seeds
+before opening target GT. Check checkpoint and original coordinate hashes.
+Source references2393 original training samples; target52901 official eval rows.
+Transport in raw CLS space, preserving native classifier input convention.
+After each transform, cosine source-kNN uses sample L2 normalization separately.
+Frozen classifier is exactly nn1 linear weight/bias, applied to RAW transformed Z.
+G0 identity (native reconstruction anchor).
+G1 one GLOBAL shared affine Gaussian moment transport from full target to source-train.
+G2 oracle class-wise centroid translation X'=X+mu_source_y-mu_target_y.
+G3 oracle class-wise affine Gaussian moment transport; distinct from G2, no orthogonal fit.
+Means/covariances use population moments in float64. For affine source/target covariances
+C, fixed ridge C_reg=C+1e-6*max(trace(C)/64,1e-12)*I. No ridge or strength search.
+Gaussian moment transport A=Ct_reg^-1/2 (Ct_reg^1/2 Cs_reg Ct_reg^1/2)^1/2 Ct_reg^-1/2;
+row-vector map X'=(X-mu_t)A+mu_s. A is symmetric positive definite, not an orthogonal map.
+SPD eigensolver uses numeric floor max(float64_tiny,lambda_max*float64_epsilon); audit covariance residual,
+matrix eigenvalues/condition, transformed feature norms and sample sizes/ranks.
+G1 andG3 use the same covariance map family; G1 can be confounded by class proportions.
+All source features stay unchanged; no fitting of classifier/readout parameters.
+Exact source cosine kNN k5/15, unweighted votes, exact cosine ties by source row index;
+vote ties by lowest class index. Correct support=count_true/k; margin=(own-max_wrong)/k.
+Classifier OA/AA and source-kNN OA/AA for all target and per-class; fixed native
+correct/error groups and every nonempty native confusion pair, especiallyC1/C7/C7->C6.
+Classifier recovery: original classifier wrong -> transformed frozen classifier correct;
+classifier damage: original classifier correct -> transformed classifier wrong.
+kNN recovery/damage relative to G0 kNN correctness, stratified by original classifier groups.
+Report all denominators, paired same-seed changes,3seed mean/sampleSD and all per-class rates.
+G2/G3 explicitly use target GT for oracle routing and same-sample target moment estimation.
+They are NOT target-blind counterfactual construction. Freeze input Z/logits/predictions
+before GT, then save/hash all oracle transforms, features, neighbor/readout predictions.
+No target-based selection of transform, k, stage, ridge, epoch or formal method.
+Oracle accuracy is not achievable UDA accuracy or an upper bound. Class labels encode
+part of the answer; same-query moment estimation is optimistic and C4 has22 samples.
+Moment affine maps can only test this fixed family; failure does not prove local-manifold
+shift, and success does not establish a uniquely identifiable physical domain mechanism.
+Global/class composition and class-conditional shifts can coexist; no causal/significance claim.
