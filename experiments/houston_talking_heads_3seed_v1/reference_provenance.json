@@ -1,0 +1,7 @@
+{
+  "repository": "https://github.com/facebookresearch/deit",
+  "commit": "7e160fe43f0252d17191b71cbb5826254114ea5b",
+  "url": "https://raw.githubusercontent.com/facebookresearch/deit/7e160fe43f0252d17191b71cbb5826254114ea5b/cait_models.py",
+  "sha256": "95b854e9845915e016f436113ca761ae335d935a48d349bf51f3e8d794593a69",
+  "scope": "reference projectionaxis/order only; no importedCaiT; controlledbias-free identityinit firstselfattention variants"
+}
